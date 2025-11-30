@@ -50,7 +50,7 @@ export function Footer() {
                 </Link>
               </li>
               <li>
-                <a href="#" className="hover:text-primary transition-colors">
+                <a href="/membership" className="hover:text-primary transition-colors">
                   Гишүүн болох
                 </a>
               </li>

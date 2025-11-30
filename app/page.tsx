@@ -46,11 +46,25 @@ export default async function Home() {
               </p>
               
               <div className="flex flex-wrap gap-4">
-                <Link href="/signup">
-                  <button className="px-8 py-3.5 bg-blue-600 hover:bg-blue-500 text-white rounded-xl font-bold transition-all shadow-xl shadow-blue-900/20 flex items-center gap-2">
-                    Бүртгүүлэх <ArrowRight size={18} />
-                  </button>
-                </Link>
+                {!session ? (
+                  <Link href="/signup">
+                    <button className="px-8 py-3.5 bg-blue-600 hover:bg-blue-500 text-white rounded-xl font-bold transition-all shadow-xl shadow-blue-900/20 flex items-center gap-2">
+                      Бүртгүүлэх <ArrowRight size={18} />
+                    </button>
+                  </Link>
+                ) : session.user.role === "FREE" ? (
+                  <Link href="/membership">
+                    <button className="px-8 py-3.5 bg-blue-600 hover:bg-blue-500 text-white rounded-xl font-bold transition-all shadow-xl shadow-blue-900/20 flex items-center gap-2">
+                      Гишүүн болох <ArrowRight size={18} />
+                    </button>
+                  </Link>
+                ) : (
+                  <Link href="/profile">
+                    <button className="px-8 py-3.5 bg-blue-600 hover:bg-blue-500 text-white rounded-xl font-bold transition-all shadow-xl shadow-blue-900/20 flex items-center gap-2">
+                      Профайл <ArrowRight size={18} />
+                    </button>
+                  </Link>
+                )}
                 <Link href="/posts">
                   <button className="px-8 py-3.5 bg-card hover:bg-accent text-foreground rounded-xl font-bold transition-all border border-border shadow-sm">
                     Нийтлэл

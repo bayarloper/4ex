@@ -40,6 +40,12 @@ export function Navbar() {
           >
             Нийтлэл
           </Link>
+          <Link 
+            href="/membership"
+            className={`text-sm font-medium transition-colors ${isActive('/membership') ? 'text-blue-500 font-bold' : 'text-muted-foreground hover:text-foreground'}`}
+          >
+            Гишүүн болох
+          </Link>
 
         </nav>
 
@@ -109,6 +115,9 @@ export function Navbar() {
             </Link>
             <Link href="/posts" className="block text-muted-foreground hover:text-foreground font-medium" onClick={() => setIsOpen(false)}>
               Нийтлэл
+            </Link>
+            <Link href="/membership" className="block text-muted-foreground hover:text-foreground font-medium" onClick={() => setIsOpen(false)}>
+              Гишүүн болох
             </Link>
             
             <div className="pt-4 border-t border-border">
