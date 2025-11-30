@@ -34,7 +34,7 @@ export function PostCard({ post }: PostCardProps) {
             />
           ) : (
             <div className="w-full h-full flex items-center justify-center bg-muted text-muted-foreground">
-              No Image
+              Зураг олдсонгүй
             </div>
           )}
           
@@ -70,7 +70,7 @@ export function PostCard({ post }: PostCardProps) {
             <button className={`w-full py-2 rounded-lg font-medium text-sm transition-colors ${
                 'bg-secondary text-secondary-foreground hover:bg-secondary/80'
             }`}>
-              {'Read More'}
+              {'Дэлгэрэнгүй'}
             </button>
           </div>
         </div>
