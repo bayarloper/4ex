@@ -25,7 +25,7 @@ export async function generateMetadata({
     };
   }
 
-  const description = (term.definition || term.content)
+  const description = (term.definition || term.content || "")
     .replace(/<[^>]*>/g, "")
     .replace(/\s+/g, " ")
     .trim()
