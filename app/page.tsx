@@ -7,6 +7,7 @@ import prisma from "@/lib/prisma";
 import { ArrowRight, Users, Shield } from "lucide-react";
 import { HeroChart, AiInsight } from "@/components/hero-visuals";
 import { PostCard } from "@/components/post-card";
+import { Post, User } from "@/lib/generated/client/client";
 
 export default async function Home() {
   const session = await auth();
@@ -98,7 +99,7 @@ export default async function Home() {
 
             {posts.length > 0 ? (
               <div className="grid md:grid-cols-3 gap-6">
-                {posts.map((post) => (
+                {posts.map((post: Post & { author: { name: string | null; image: string | null } | null }) => (
                   <PostCard key={post.id} post={post} />
                 ))}
               </div>
