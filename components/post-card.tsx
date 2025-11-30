@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { Zap, Lock, Clock } from "lucide-react";
-import { Post, User } from "@/lib/generated/prisma/client";
+import { Post, User } from "@prisma/client";
 
 interface PostCardProps {
   post: Post & { author: Pick<User, "name" | "image"> | null };

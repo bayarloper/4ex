@@ -1,5 +1,5 @@
 import { auth } from "./auth";
-import type { UserRole } from "./generated/prisma/client";
+import type { UserRole } from "@prisma/client";
 
 export async function getSession() {
   return await auth();
