@@ -23,7 +23,17 @@ export default async function PostsPage({
       ],
     } : undefined,
     orderBy: { createdAt: "desc" },
-    include: { author: true },
+    select: {
+      id: true,
+      title: true,
+      content: true,
+      featuredImage: true,
+      category: true,
+      createdAt: true,
+      author: {
+        select: { name: true, image: true },
+      },
+    },
   });
 
   return (

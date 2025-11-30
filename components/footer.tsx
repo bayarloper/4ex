@@ -45,11 +45,6 @@ export function Footer() {
                 </Link>
               </li>
               <li>
-                <Link href="/signup" className="hover:text-primary transition-colors">
-                  Бүртгүүлэх
-                </Link>
-              </li>
-              <li>
                 <a href="/membership" className="hover:text-primary transition-colors">
                   Гишүүн болох
                 </a>

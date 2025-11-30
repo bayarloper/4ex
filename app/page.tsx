@@ -16,7 +16,13 @@ export default async function Home() {
   const posts = await prisma.post.findMany({
     take: 6,
     orderBy: { createdAt: "desc" },
-    include: {
+    select: {
+      id: true,
+      title: true,
+      content: true,
+      featuredImage: true,
+      category: true,
+      createdAt: true,
       author: {
         select: { name: true, image: true },
       },
@@ -24,8 +30,23 @@ export default async function Home() {
   });
 
   const terms = await prisma.term.findMany({
-    orderBy: { term: 'asc' }
+    orderBy: { term: 'asc' },
+    select: {
+      id: true,
+      term: true,
+      definition: true,
+      category: true,
+      content: true,
+    }
   });
+
+  const termsData = terms.map(term => ({
+    id: term.id,
+    term: term.term,
+    definition: term.definition,
+    category: term.category,
+    hasContent: !!term.content && term.content.length > 0
+  }));
 
   return (
     <>
@@ -109,7 +130,7 @@ export default async function Home() {
 
             {posts.length > 0 ? (
               <div className="grid md:grid-cols-3 gap-6">
-                {posts.map((post: Post & { author: { name: string | null; image: string | null } | null }) => (
+                {posts.map((post) => (
                   <PostCard key={post.id} post={post} />
                 ))}
               </div>
@@ -144,7 +165,7 @@ export default async function Home() {
         </section>
 
         {/* ICT Trading Checklist */}
-        <TermsSection terms={terms} />
+        <TermsSection terms={termsData} />
 
       </main>
 

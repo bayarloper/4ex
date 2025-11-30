@@ -38,16 +38,8 @@
     min-height: var(--tt-toolbar-height);
     background: var(--tt-toolbar-bg-color);
     border-bottom: 1px solid var(--tt-toolbar-border-color);
-    padding: 0 0.5rem;
-    overflow-x: auto;
-    overscroll-behavior-x: contain;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: none;
-    -ms-overflow-style: none;
-
-    &::-webkit-scrollbar {
-      display: none;
-    }
+    padding: 0.25rem 0.5rem;
+    flex-wrap: wrap;
 
     @media (max-width: 480px) {
       position: absolute;
@@ -58,6 +50,15 @@
       padding: 0 0.5rem var(--tt-safe-area-bottom);
       flex-wrap: nowrap;
       justify-content: flex-start;
+      overflow-x: auto;
+      overscroll-behavior-x: contain;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+
+      &::-webkit-scrollbar {
+        display: none;
+      }
 
       .tiptap-toolbar-group {
         flex: 0 0 auto;

@@ -70,3 +70,12 @@ export async function updateTerm(id: string, formData: FormData) {
   revalidatePath("/admin");
   revalidatePath("/");
 }
+
+export async function getTerm(id: string) {
+  const session = await auth();
+  if (session?.user.role !== "ADMIN") {
+    throw new Error("Unauthorized");
+  }
+  return prisma.term.findUnique({ where: { id } });
+}
+

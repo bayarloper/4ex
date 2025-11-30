@@ -37,8 +37,33 @@ export default async function AdminDashboard() {
     }),
     prisma.term.findMany({
       orderBy: { term: "asc" },
+      select: {
+        id: true,
+        term: true,
+        definition: true,
+        category: true,
+        content: true, // Still need to know if content exists, but maybe we can select just a boolean? No, Prisma doesn't support that easily.
+        // Actually, for the list view we show "Has Content" badge.
+        // If content is huge, selecting it is bad.
+        // But we can't select "length of content" easily.
+        // Let's select it for now, but maybe we can optimize later if it's really slow.
+        // Wait, I can select `content` but I will truncate it in the map below.
+      },
     }),
   ]);
 
-  return <AdminDashboardClient users={users} posts={posts} terms={terms} />;
+  // Optimize posts payload
+  const optimizedPosts = posts.map(post => ({
+    ...post,
+    content: post.content.substring(0, 200)
+  }));
+
+  // Optimize terms payload - remove content string to save bandwidth
+  const optimizedTerms = terms.map(term => ({
+    ...term,
+    content: term.content ? "..." : null, // Just a marker that it exists
+    hasContent: !!term.content && term.content.length > 0
+  }));
+
+  return <AdminDashboardClient users={users} posts={optimizedPosts} terms={optimizedTerms} />;
 }

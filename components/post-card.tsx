@@ -6,7 +6,15 @@ import { Clock } from "lucide-react";
 import { Post, User } from "@/lib/generated/client/client";
 
 interface PostCardProps {
-  post: Post & { author: Pick<User, "name" | "image"> | null };
+  post: {
+    id: string;
+    title: string;
+    content: string;
+    featuredImage: string | null;
+    category: string;
+    createdAt: Date;
+    author: { name: string | null; image: string | null } | null;
+  };
 }
 
 export function PostCard({ post }: PostCardProps) {
@@ -67,11 +75,11 @@ export function PostCard({ post }: PostCardProps) {
           </p>
 
           <div className="mt-auto">
-            <button className={`w-full py-2 rounded-lg font-medium text-sm transition-colors ${
+            <div className={`w-full py-2 rounded-lg font-medium text-sm transition-colors text-center ${
                 'bg-secondary text-secondary-foreground hover:bg-secondary/80'
             }`}>
               {'Дэлгэрэнгүй'}
-            </button>
+            </div>
           </div>
         </div>
       </div>

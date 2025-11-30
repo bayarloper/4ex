@@ -8,16 +8,45 @@ import { Button } from "@/components/ui/button";
 import { Term } from "@/lib/generated/client/client";
 import { cn } from "@/lib/utils";
 
+const CATEGORY_ORDER = [
+  "GENERAL TERMS",
+  "SESSIONS",
+  "TIME ELEMENTS",
+  "KEY HIGH IMPACT NEWS",
+  "MARKET STRUCTURE",
+  "MARKET MAKER MODEL",
+  "LIQUIDITY",
+  "IMBALANCES / GAPS",
+  "BLOCKS",
+  "ENTRIES AND RISK MANAGEMENT"
+];
+
+interface TermSummary {
+  id: string;
+  term: string;
+  definition: string;
+  category: string;
+  hasContent: boolean;
+}
+
 interface TermsSectionProps {
-  terms: Term[];
+  terms: TermSummary[];
 }
 
 export function TermsSection({ terms }: TermsSectionProps) {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("Бүгд");
 
-  // Get unique categories
-  const categories = ["Бүгд", ...Array.from(new Set(terms.map(t => t.category)))];
+  // Get unique categories and sort them
+  const uniqueCategories = Array.from(new Set(terms.map(t => t.category)));
+  const categories = ["Бүгд", ...uniqueCategories.sort((a, b) => {
+    const indexA = CATEGORY_ORDER.indexOf(a);
+    const indexB = CATEGORY_ORDER.indexOf(b);
+    if (indexA !== -1 && indexB !== -1) return indexA - indexB;
+    if (indexA !== -1) return -1;
+    if (indexB !== -1) return 1;
+    return a.localeCompare(b);
+  })];
 
   // Filter terms
   const filteredTerms = terms.filter(term => {
@@ -35,7 +64,7 @@ export function TermsSection({ terms }: TermsSectionProps) {
     if (!acc[term.category]) acc[term.category] = [];
     acc[term.category].push(term);
     return acc;
-  }, {} as Record<string, Term[]>);
+  }, {} as Record<string, TermSummary[]>);
 
   return (
     <section className="py-24 bg-background relative overflow-hidden">
@@ -89,7 +118,16 @@ export function TermsSection({ terms }: TermsSectionProps) {
 
         {/* Terms Grid */}
         <div className="space-y-12">
-          {Object.entries(groupedTerms).map(([category, categoryTerms]) => (
+          {Object.entries(groupedTerms)
+            .sort(([catA], [catB]) => {
+              const indexA = CATEGORY_ORDER.indexOf(catA);
+              const indexB = CATEGORY_ORDER.indexOf(catB);
+              if (indexA !== -1 && indexB !== -1) return indexA - indexB;
+              if (indexA !== -1) return -1;
+              if (indexB !== -1) return 1;
+              return catA.localeCompare(catB);
+            })
+            .map(([category, categoryTerms]) => (
             <div key={category} className="animate-in fade-in slide-in-from-bottom-4 duration-500">
               <h3 className="text-1xl font-bold text-foreground mb-6 flex items-center gap-3">
                 <span className="w-1 h-8 bg-gradient-to-b from-blue-500 to-purple-500 rounded-full" />
@@ -109,7 +147,7 @@ export function TermsSection({ terms }: TermsSectionProps) {
                           <span className="font-black text-sm text-primary tracking-tight">
                             {term.term}
                           </span>
-                          {term.content && (
+                          {term.hasContent && (
                             <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" title="Дэлгэрэнгүй" />
                           )}
                         </div>
