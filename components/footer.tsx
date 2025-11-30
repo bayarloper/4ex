@@ -15,12 +15,12 @@ export function Footer() {
           <div>
             <div className="flex items-center space-x-2 mb-4">
               <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center shadow-md">
-                <span className="text-primary-foreground font-bold text-sm">B</span>
+                <span className="text-primary-foreground font-bold text-sm">4EX</span>
               </div>
-              <span className="text-lg font-bold text-foreground">Blog</span>
+              <span className="text-lg font-bold text-foreground">Pedia</span>
             </div>
             <p className="text-muted-foreground text-sm mb-4">
-              A modern blogging platform with rich content creation and member-only articles.
+              Форекс ICT аргачлалд суурилсан мэдлэгийн сангийн платформ.
             </p>
             <div className="flex space-x-4">
               <a href="#" className="text-muted-foreground hover:text-primary transition-colors">
@@ -37,26 +37,21 @@ export function Footer() {
 
           {/* Product */}
           <div>
-            <h3 className="font-semibold text-foreground mb-4">Product</h3>
+            <h3 className="font-semibold text-foreground mb-4">Үйлчилгээ</h3>
             <ul className="space-y-2 text-sm text-muted-foreground">
               <li>
                 <Link href="/posts" className="hover:text-primary transition-colors">
-                  Browse Posts
+                  Нийтлэл
                 </Link>
               </li>
               <li>
                 <Link href="/signup" className="hover:text-primary transition-colors">
-                  Become a Member
+                  Бүртгүүлэх
                 </Link>
               </li>
               <li>
                 <a href="#" className="hover:text-primary transition-colors">
-                  Features
-                </a>
-              </li>
-              <li>
-                <a href="#" className="hover:text-primary transition-colors">
-                  Pricing
+                  Гишүүн болох
                 </a>
               </li>
             </ul>
@@ -64,26 +59,21 @@ export function Footer() {
 
           {/* Company */}
           <div>
-            <h3 className="font-semibold text-foreground mb-4">Company</h3>
+            <h3 className="font-semibold text-foreground mb-4">Мэдээлэл</h3>
             <ul className="space-y-2 text-sm text-muted-foreground">
               <li>
                 <a href="#" className="hover:text-primary transition-colors">
-                  About Us
+                  Бидний тухай
                 </a>
               </li>
               <li>
                 <a href="#" className="hover:text-primary transition-colors">
-                  Blog
+                  Холбоо барих
                 </a>
               </li>
               <li>
                 <a href="#" className="hover:text-primary transition-colors">
-                  Contact
-                </a>
-              </li>
-              <li>
-                <a href="#" className="hover:text-primary transition-colors">
-                  Careers
+                  Хамтран ажиллах
                 </a>
               </li>
             </ul>
@@ -91,21 +81,16 @@ export function Footer() {
 
           {/* Legal */}
           <div>
-            <h3 className="font-semibold text-foreground mb-4">Legal</h3>
+            <h3 className="font-semibold text-foreground mb-4">Хууль эрх зүй</h3>
             <ul className="space-y-2 text-sm text-muted-foreground">
               <li>
                 <a href="#" className="hover:text-primary transition-colors">
-                  Privacy Policy
+                  Нууцлалын бодлого
                 </a>
               </li>
               <li>
                 <a href="#" className="hover:text-primary transition-colors">
-                  Terms of Service
-                </a>
-              </li>
-              <li>
-                <a href="#" className="hover:text-primary transition-colors">
-                  Cookie Policy
+                  Үйлчилгээний нөхцөл
                 </a>
               </li>
             </ul>
@@ -116,19 +101,8 @@ export function Footer() {
         <div className="border-t border-border"></div>
 
         {/* Bottom Footer */}
-        <div className="flex flex-col md:flex-row justify-between items-center py-8 text-sm text-muted-foreground">
-          <p>&copy; {currentYear} Blog. All rights reserved.</p>
-          <div className="flex space-x-6 mt-4 md:mt-0">
-            <a href="#" className="hover:text-primary transition-colors">
-              Privacy
-            </a>
-            <a href="#" className="hover:text-primary transition-colors">
-              Terms
-            </a>
-            <a href="#" className="hover:text-primary transition-colors">
-              Contact
-            </a>
-          </div>
+        <div className="flex flex-col justify-between items-center py-8 text-sm text-muted-foreground">
+          <p>&copy; {currentYear} Бүх эрх хуулиар хамгаалагдсан.</p>  
         </div>
       </div>
     </footer>

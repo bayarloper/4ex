@@ -1,7 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { Zap, Lock, Clock } from "lucide-react";
+import Image from "next/image";
+import { Clock } from "lucide-react";
 import { Post, User } from "@/lib/generated/client/client";
 
 interface PostCardProps {
@@ -25,10 +26,11 @@ export function PostCard({ post }: PostCardProps) {
         {/* Image Container */}
         <div className="relative h-48 overflow-hidden bg-muted">
           {post.featuredImage ? (
-            <img 
+            <Image 
               src={post.featuredImage} 
               alt={post.title} 
-              className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+              fill
+              className="object-cover transition-transform duration-500 group-hover:scale-105"
             />
           ) : (
             <div className="w-full h-full flex items-center justify-center bg-muted text-muted-foreground">

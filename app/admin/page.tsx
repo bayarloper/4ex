@@ -10,7 +10,7 @@ export default async function AdminDashboard() {
     redirect("/");
   }
 
-  const [users, posts] = await Promise.all([
+  const [users, posts, terms] = await Promise.all([
     prisma.user.findMany({
       select: {
         id: true,
@@ -35,7 +35,10 @@ export default async function AdminDashboard() {
       },
       orderBy: { createdAt: "desc" },
     }),
+    prisma.term.findMany({
+      orderBy: { term: "asc" },
+    }),
   ]);
 
-  return <AdminDashboardClient users={users} posts={posts} />;
+  return <AdminDashboardClient users={users} posts={posts} terms={terms} />;
 }

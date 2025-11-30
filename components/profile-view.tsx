@@ -1,6 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import Image from "next/image";
 import {
   User as UserIcon,
   FileText,
@@ -8,7 +9,6 @@ import {
   Calendar,
   Shield,
   CheckCircle,
-  Edit2,
   LayoutDashboard
 } from "lucide-react";
 import { SignOutButton } from "@/components/sign-out-button";
@@ -23,7 +23,7 @@ interface ProfileViewProps {
   posts: any[];
 }
 
-export function ProfileView({ user, stats, posts }: ProfileViewProps) {
+export function ProfileView({ user, stats }: ProfileViewProps) {
   return (
     <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
       {/* Profile Card */}
@@ -40,12 +40,13 @@ export function ProfileView({ user, stats, posts }: ProfileViewProps) {
           <div className="flex flex-col md:flex-row items-start md:items-end gap-6 -mt-16 mb-8">
             {/* Avatar */}
             <div className="relative">
-              <div className="w-32 h-32 rounded-2xl border-4 border-card bg-card shadow-2xl overflow-hidden">
+              <div className="w-32 h-32 rounded-2xl border-4 border-card bg-card shadow-2xl overflow-hidden relative">
                 {user.image ? (
-                  <img
+                  <Image
                     src={user.image}
                     alt={user.name}
-                    className="w-full h-full object-cover"
+                    fill
+                    className="object-cover"
                   />
                 ) : (
                   <div className="w-full h-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-400 text-4xl font-bold">

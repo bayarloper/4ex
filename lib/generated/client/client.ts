@@ -64,3 +64,8 @@ export type VerificationToken = Prisma.VerificationTokenModel
  * 
  */
 export type Post = Prisma.PostModel
+/**
+ * Model Term
+ * 
+ */
+export type Term = Prisma.TermModel

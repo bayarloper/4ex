@@ -3,8 +3,9 @@
 import { signOut, useSession } from "next-auth/react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import Image from "next/image";
 import { useState } from "react";
-import { Menu, X, Search, User, LogOut } from "lucide-react";
+import { Menu, X, LogOut } from "lucide-react";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { usePathname } from "next/navigation";
 
@@ -47,9 +48,6 @@ export function Navbar() {
           <div className="hidden md:block">
              <ThemeToggle />
           </div>
-          <button className="text-muted-foreground hover:text-foreground p-2">
-            <Search size={20} />
-          </button>
           <div className="h-4 w-[1px] bg-border hidden sm:block"></div>
           
           {status === "loading" ? (
@@ -58,7 +56,7 @@ export function Navbar() {
             <div className="hidden sm:flex items-center gap-4">
               <Link href="/profile" className="flex items-center gap-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
                 {session.user.image ? (
-                  <img src={session.user.image} alt="Profile" className="w-8 h-8 rounded-full border border-border" />
+                  <Image src={session.user.image} alt="Profile" width={32} height={32} className="rounded-full border border-border" />
                 ) : (
                   <div className="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center text-white font-bold">
                     {session.user.name?.[0] || "U"}
@@ -118,7 +116,7 @@ export function Navbar() {
                 <div className="space-y-4">
                   <Link href="/profile" className="flex items-center gap-3 text-muted-foreground" onClick={() => setIsOpen(false)}>
                     {session.user.image ? (
-                      <img src={session.user.image} alt="Profile" className="w-8 h-8 rounded-full" />
+                      <Image src={session.user.image} alt="Profile" width={32} height={32} className="rounded-full" />
                     ) : (
                       <div className="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center text-white font-bold">
                         {session.user.name?.[0] || "U"}

@@ -15,15 +15,17 @@ import {
 import { UserManagement } from "./user-management";
 import { AdminOverview } from "./admin-overview";
 import { AdminNews } from "./admin-news";
+import { AdminTerms } from "./admin-terms";
 import { Button } from "@/components/ui/button";
 
 interface AdminDashboardClientProps {
   users: any[];
   posts: any[];
+  terms: any[];
 }
 
-export function AdminDashboardClient({ users, posts }: AdminDashboardClientProps) {
-  const [activeTab, setActiveTab] = useState<"overview" | "users" | "news">("overview");
+export function AdminDashboardClient({ users, posts, terms }: AdminDashboardClientProps) {
+  const [activeTab, setActiveTab] = useState<"overview" | "users" | "news" | "terms">("overview");
 
   return (
     <div className="flex min-h-screen bg-slate-950 text-slate-100 font-sans">
@@ -78,6 +80,18 @@ export function AdminDashboardClient({ users, posts }: AdminDashboardClientProps
             <span className="font-medium">News & Courses</span>
           </button>
 
+          <button
+            onClick={() => setActiveTab("terms")}
+            className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${
+              activeTab === "terms" 
+                ? "bg-blue-600 text-white shadow-lg shadow-blue-900/20" 
+                : "text-slate-400 hover:bg-slate-800 hover:text-slate-200"
+            }`}
+          >
+            <FileText size={20} />
+            <span className="font-medium">Terms & Glossary</span>
+          </button>
+
           <div className="pt-4 mt-4 border-t border-slate-800">
             <Link href="/posts/new">
               <button className="w-full flex items-center gap-3 px-4 py-3 rounded-xl border border-dashed border-slate-700 text-slate-400 hover:bg-slate-800 hover:text-blue-400 transition-all group">
@@ -107,6 +121,7 @@ export function AdminDashboardClient({ users, posts }: AdminDashboardClientProps
             {activeTab === "overview" && "Overview"}
             {activeTab === "users" && "User Management"}
             {activeTab === "news" && "News & Courses"}
+            {activeTab === "terms" && "Terms & Glossary"}
           </h2>
           
           <div className="flex items-center gap-4">
@@ -130,6 +145,7 @@ export function AdminDashboardClient({ users, posts }: AdminDashboardClientProps
           {activeTab === "overview" && <AdminOverview users={users} posts={posts} />}
           {activeTab === "users" && <UserManagement initialUsers={users} />}
           {activeTab === "news" && <AdminNews posts={posts} />}
+          {activeTab === "terms" && <AdminTerms terms={terms} />}
         </div>
       </main>
     </div>

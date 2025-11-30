@@ -2,6 +2,7 @@
 
 import { TrendingUp, Users, FileText, ArrowUpRight } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
 
 interface AdminOverviewProps {
   users: any[];
@@ -72,9 +73,9 @@ export function AdminOverview({ users, posts }: AdminOverviewProps) {
           <div className="divide-y divide-slate-800">
             {posts.slice(0, 5).map((post: any) => (
               <div key={post.id} className="p-4 hover:bg-slate-800/50 transition-colors flex items-center gap-4">
-                <div className="w-16 h-16 bg-slate-800 rounded-lg flex-shrink-0 overflow-hidden">
+                <div className="w-16 h-16 bg-slate-800 rounded-lg flex-shrink-0 overflow-hidden relative">
                   {post.featuredImage ? (
-                    <img src={post.featuredImage} alt="" className="w-full h-full object-cover" />
+                    <Image src={post.featuredImage} alt="" fill className="object-cover" />
                   ) : (
                     <div className="w-full h-full flex items-center justify-center text-slate-600">
                       <FileText size={24} />

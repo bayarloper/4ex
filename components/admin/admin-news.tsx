@@ -1,7 +1,8 @@
 "use client";
 
-import { FileText, Search, Filter, MoreVertical, Edit, Trash2, Eye } from "lucide-react";
+import { FileText, Filter, MoreVertical, Edit, Trash2, Eye } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -54,9 +55,9 @@ export function AdminNews({ posts }: AdminNewsProps) {
                 <tr key={post.id} className="hover:bg-slate-800/50 transition-colors">
                   <td className="px-6 py-4">
                     <div className="flex items-center gap-4">
-                      <div className="w-12 h-12 bg-slate-800 rounded-lg overflow-hidden flex-shrink-0">
+                      <div className="w-12 h-12 bg-slate-800 rounded-lg overflow-hidden flex-shrink-0 relative">
                         {post.featuredImage ? (
-                          <img src={post.featuredImage} alt="" className="w-full h-full object-cover" />
+                          <Image src={post.featuredImage} alt="" fill className="object-cover" />
                         ) : (
                           <div className="w-full h-full flex items-center justify-center text-slate-600">
                             <FileText size={20} />

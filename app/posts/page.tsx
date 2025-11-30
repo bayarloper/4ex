@@ -5,8 +5,7 @@ import prisma from "@/lib/prisma";
 import { Navbar } from "@/components/navbar";
 import { Footer } from "@/components/footer";
 import { auth } from "@/lib/auth";
-import { Search, ChevronRight, Calendar, User } from "lucide-react";
-import Image from "next/image";
+import { Search } from "lucide-react";
 import { PostCard } from "@/components/post-card";
 
 export default async function PostsPage() {
