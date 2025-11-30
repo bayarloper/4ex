@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Roboto_Condensed, Geist_Mono } from "next/font/google";
+import { Roboto_Condensed } from "next/font/google";
 import "./globals.css";
 import { AuthProvider } from "@/components/auth-provider";
 import { ThemeProvider } from "@/components/theme-provider";
@@ -9,14 +9,10 @@ const robotoCondensed = Roboto_Condensed({
   subsets: ["latin"],
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
 
 export const metadata: Metadata = {
-  title: "4ex.mn - Master the Forex Markets",
-  description: "Get premium signals, expert courses, and real-time AI analysis. Join 4ex.mn to elevate your trading strategy today.",
+  title: "4EX.MN - Форекс суралцагчдын толь бичиг",
+  description: "Форекс суралцагчдын толь бичиг бөгөөд форексийн үндсэн ойлголтууд, стратеги, шинжилгээний аргуудыг хялбаршуулан тайлбарласан вэбсайт юм.",
 };
 
 export default function RootLayout({

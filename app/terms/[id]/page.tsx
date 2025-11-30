@@ -1,4 +1,5 @@
 
+import { Metadata } from "next";
 import ReadOnlyEditor from "@/components/tiptap-templates/simple/read-only-editor";
 import { Button } from "@/components/ui/button";
 import prisma from "@/lib/prisma";
@@ -6,6 +7,45 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Navbar } from "@/components/navbar";
 import { auth } from "@/lib/auth";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}): Promise<Metadata> {
+  const { id } = await params;
+
+  const term = await prisma.term.findUnique({
+    where: { id },
+  });
+
+  if (!term) {
+    return {
+      title: "Term not found",
+    };
+  }
+
+  const description = (term.definition || term.content)
+    .replace(/<[^>]*>/g, "")
+    .replace(/\s+/g, " ")
+    .trim()
+    .substring(0, 160);
+
+  return {
+    title: `${term.term} - 4EX.MN`,
+    description: description,
+    openGraph: {
+      title: `${term.term} - 4EX.MN`,
+      description: description,
+      type: "article",
+    },
+    twitter: {
+      card: "summary",
+      title: `${term.term} - 4EX.MN`,
+      description: description,
+    },
+  };
+}
 
 export default async function TermPage({
   params,

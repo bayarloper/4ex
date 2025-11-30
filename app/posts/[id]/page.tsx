@@ -1,3 +1,4 @@
+import { Metadata } from "next";
 import ReadOnlyEditor from "@/components/tiptap-templates/simple/read-only-editor";
 import { Button } from "@/components/ui/button";
 import prisma from "@/lib/prisma";
@@ -6,6 +7,53 @@ import { notFound } from "next/navigation";
 import { Navbar } from "@/components/navbar";
 import { auth } from "@/lib/auth";
 import Image from "next/image";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}): Promise<Metadata> {
+  const { id } = await params;
+
+  const post = await prisma.post.findUnique({
+    where: { id },
+    select: {
+      title: true,
+      content: true,
+      featuredImage: true,
+    },
+  });
+
+  if (!post) {
+    return {
+      title: "Post not found",
+    };
+  }
+
+  // Strip HTML tags and truncate for description
+  const description = post.content
+    .replace(/<[^>]*>/g, "")
+    .replace(/\s+/g, " ")
+    .trim()
+    .substring(0, 160);
+
+  return {
+    title: post.title,
+    description: description,
+    openGraph: {
+      title: post.title,
+      description: description,
+      images: post.featuredImage ? [{ url: post.featuredImage }] : [],
+      type: "article",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: post.title,
+      description: description,
+      images: post.featuredImage ? [post.featuredImage] : [],
+    },
+  };
+}
 
 export default async function PostPage({
   params,
