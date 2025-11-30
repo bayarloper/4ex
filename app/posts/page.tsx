@@ -36,7 +36,7 @@ export default async function PostsPage({
 
 
             {/* Search Bar */}
-            <SearchBar placeholder="Search articles..." />
+            <SearchBar placeholder="Нийтлэл хайх..." />
           </div>
         </section>
 
