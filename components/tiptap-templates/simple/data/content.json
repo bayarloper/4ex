@@ -1,0 +1,14 @@
+{
+  "type": "doc",
+  "content": [
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "This is a simple template to get you started with TipTap. Feel free to modify and expand upon it as needed!"
+        }
+      ]
+    }
+  ]
+}
