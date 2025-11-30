@@ -1,16 +1,27 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import prisma from "@/lib/prisma";
 import { Navbar } from "@/components/navbar";
 import { Footer } from "@/components/footer";
 import { auth } from "@/lib/auth";
-import { Search } from "lucide-react";
 import { PostCard } from "@/components/post-card";
+import { SearchBar } from "@/components/search-bar";
 
-export default async function PostsPage() {
+export default async function PostsPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ query?: string }>;
+}) {
+  const { query } = await searchParams;
   const session = await auth();
+  
   const posts = await prisma.post.findMany({
+    where: query ? {
+      OR: [
+        { title: { contains: query, mode: 'insensitive' } },
+        { content: { contains: query, mode: 'insensitive' } },
+      ],
+    } : undefined,
     orderBy: { createdAt: "desc" },
     include: { author: true },
   });
@@ -25,13 +36,7 @@ export default async function PostsPage() {
 
 
             {/* Search Bar */}
-            <div className="relative max-w-2xl">
-              <Search className="absolute left-3 top-3 text-muted-foreground" size={20} />
-              <Input
-                placeholder="Search articles..."
-                className="pl-10 py-6 text-base rounded-lg border-border bg-background text-foreground shadow-sm"
-              />
-            </div>
+            <SearchBar placeholder="Search articles..." />
           </div>
         </section>
 
@@ -64,10 +69,10 @@ export default async function PostsPage() {
           ) : (
             <div className="text-center py-16">
               <h2 className="text-2xl font-bold text-foreground mb-4">
-                No articles yet
+                {query ? "No articles found" : "No articles yet"}
               </h2>
               <p className="text-muted-foreground mb-6">
-                Check back soon for exciting content from our community.
+                {query ? `We couldn't find any articles matching "${query}"` : "Check back soon for exciting content from our community."}
               </p>
               {session?.user?.role === "ADMIN" && (
                 <Link href="/">

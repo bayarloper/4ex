@@ -10,12 +10,37 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 interface AdminNewsProps {
   posts: any[];
 }
 
 export function AdminNews({ posts }: AdminNewsProps) {
+  const router = useRouter();
+  const [deletingId, setDeletingId] = useState<string | null>(null);
+
+  const handleDelete = async (id: string) => {
+    if (!confirm("Are you sure you want to delete this post?")) return;
+    
+    setDeletingId(id);
+    try {
+      const res = await fetch(`/api/posts/${id}`, {
+        method: "DELETE",
+      });
+
+      if (!res.ok) throw new Error("Failed to delete");
+
+      router.refresh();
+    } catch (error) {
+      console.error(error);
+      alert("Failed to delete post");
+    } finally {
+      setDeletingId(null);
+    }
+  };
+
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
@@ -106,8 +131,13 @@ export function AdminNews({ posts }: AdminNewsProps) {
                             <Edit size={16} className="mr-2" /> Edit
                           </DropdownMenuItem>
                         </Link>
-                        <DropdownMenuItem className="text-red-400 hover:bg-red-500/10 focus:bg-red-500/10 cursor-pointer">
-                          <Trash2 size={16} className="mr-2" /> Delete
+                        <DropdownMenuItem 
+                          className="text-red-400 hover:bg-red-500/10 focus:bg-red-500/10 cursor-pointer"
+                          onClick={() => handleDelete(post.id)}
+                          disabled={deletingId === post.id}
+                        >
+                          <Trash2 size={16} className="mr-2" /> 
+                          {deletingId === post.id ? "Deleting..." : "Delete"}
                         </DropdownMenuItem>
                       </DropdownMenuContent>
                     </DropdownMenu>
