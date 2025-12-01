@@ -19,7 +19,7 @@ export default function MembershipPage() {
               Та манай премиум гишүүн болсноор бүх мэдээллийг харах боломжтой.
             </CardDescription>
           </CardHeader>
-          <CardContent className="space-y-6">
+          {/* <CardContent className="space-y-6">
             <div className="bg-muted/50 p-4 rounded-lg space-y-3 border border-border">
               <div className="flex justify-between items-center">
                 <span className="text-muted-foreground text-sm">Банк:</span>
@@ -50,7 +50,7 @@ export default function MembershipPage() {
                 </li>
               </ul>
             </div>
-          </CardContent>
+          </CardContent> */}
           <CardFooter className="flex flex-col gap-2">
             <p className="text-xs text-center text-muted-foreground w-full mb-4">
               Асуух зүйл байвал админтай холбогдоно уу.
