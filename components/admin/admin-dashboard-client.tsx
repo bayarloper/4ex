@@ -2,12 +2,12 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { 
-  LayoutDashboard, 
-  Users, 
-  FileText, 
-  Settings, 
-  LogOut, 
+import {
+  LayoutDashboard,
+  Users,
+  FileText,
+  Settings,
+  LogOut,
   PlusCircle,
   Search,
   Bell
@@ -46,11 +46,10 @@ export function AdminDashboardClient({ users, posts, terms }: AdminDashboardClie
         <nav className="flex-1 p-4 space-y-2">
           <button
             onClick={() => setActiveTab("overview")}
-            className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${
-              activeTab === "overview" 
-                ? "bg-blue-600 text-white shadow-lg shadow-blue-900/20" 
+            className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${activeTab === "overview"
+                ? "bg-blue-600 text-white shadow-lg shadow-blue-900/20"
                 : "text-slate-400 hover:bg-slate-800 hover:text-slate-200"
-            }`}
+              }`}
           >
             <LayoutDashboard size={20} />
             <span className="font-medium">Overview</span>
@@ -58,11 +57,10 @@ export function AdminDashboardClient({ users, posts, terms }: AdminDashboardClie
 
           <button
             onClick={() => setActiveTab("users")}
-            className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${
-              activeTab === "users" 
-                ? "bg-blue-600 text-white shadow-lg shadow-blue-900/20" 
+            className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${activeTab === "users"
+                ? "bg-blue-600 text-white shadow-lg shadow-blue-900/20"
                 : "text-slate-400 hover:bg-slate-800 hover:text-slate-200"
-            }`}
+              }`}
           >
             <Users size={20} />
             <span className="font-medium">Manage Users</span>
@@ -70,11 +68,10 @@ export function AdminDashboardClient({ users, posts, terms }: AdminDashboardClie
 
           <button
             onClick={() => setActiveTab("news")}
-            className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${
-              activeTab === "news" 
-                ? "bg-blue-600 text-white shadow-lg shadow-blue-900/20" 
+            className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${activeTab === "news"
+                ? "bg-blue-600 text-white shadow-lg shadow-blue-900/20"
                 : "text-slate-400 hover:bg-slate-800 hover:text-slate-200"
-            }`}
+              }`}
           >
             <FileText size={20} />
             <span className="font-medium">News & Courses</span>
@@ -82,11 +79,10 @@ export function AdminDashboardClient({ users, posts, terms }: AdminDashboardClie
 
           <button
             onClick={() => setActiveTab("terms")}
-            className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${
-              activeTab === "terms" 
-                ? "bg-blue-600 text-white shadow-lg shadow-blue-900/20" 
+            className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${activeTab === "terms"
+                ? "bg-blue-600 text-white shadow-lg shadow-blue-900/20"
                 : "text-slate-400 hover:bg-slate-800 hover:text-slate-200"
-            }`}
+              }`}
           >
             <FileText size={20} />
             <span className="font-medium">Terms & Glossary</span>
@@ -123,13 +119,13 @@ export function AdminDashboardClient({ users, posts, terms }: AdminDashboardClie
             {activeTab === "news" && "News & Courses"}
             {activeTab === "terms" && "Terms & Glossary"}
           </h2>
-          
+
           <div className="flex items-center gap-4">
             <div className="relative">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" size={18} />
-              <input 
-                type="text" 
-                placeholder="Search..." 
+              <input
+                type="text"
+                placeholder="Search..."
                 className="bg-slate-900 border border-slate-800 text-slate-200 pl-10 pr-4 py-2 rounded-lg focus:outline-none focus:border-blue-500 w-64"
               />
             </div>

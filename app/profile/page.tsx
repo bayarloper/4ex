@@ -53,10 +53,10 @@ export default async function ProfilePage() {
     <>
       <Navbar />
       <main className="min-h-screen bg-background">
-        <ProfileView 
-          user={user} 
-          stats={{ postsCount: postsCreated, joinDate }} 
-          posts={userPosts} 
+        <ProfileView
+          user={user}
+          stats={{ postsCount: postsCreated, joinDate }}
+          posts={userPosts}
         />
       </main>
       <Footer />

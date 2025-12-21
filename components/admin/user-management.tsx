@@ -8,7 +8,6 @@ import {
   UserCog,
   Shield,
   Search,
-  Filter
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -24,6 +23,16 @@ import {
   DropdownMenuRadioGroup,
   DropdownMenuRadioItem,
 } from "@/components/ui/dropdown-menu";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 
 interface User {
   id: string;
@@ -41,6 +50,7 @@ export function UserManagement({ initialUsers }: UserManagementProps) {
   const [users, setUsers] = useState(initialUsers);
   const router = useRouter();
   const [loadingId, setLoadingId] = useState<string | null>(null);
+  const [deleteId, setDeleteId] = useState<string | null>(null);
 
   const handleRoleChange = async (userId: string, newRole: string) => {
     setLoadingId(userId);
@@ -67,12 +77,12 @@ export function UserManagement({ initialUsers }: UserManagementProps) {
     }
   };
 
-  const handleDelete = async (userId: string) => {
-    if (!confirm("Are you sure you want to delete this user? This action cannot be undone.")) return;
+  const handleDelete = async () => {
+    if (!deleteId) return;
 
-    setLoadingId(userId);
+    setLoadingId(deleteId);
     try {
-      const res = await fetch(`/api/admin/users/${userId}`, {
+      const res = await fetch(`/api/admin/users/${deleteId}`, {
         method: "DELETE",
       });
 
@@ -82,32 +92,19 @@ export function UserManagement({ initialUsers }: UserManagementProps) {
         return;
       }
 
-      setUsers(users.filter(u => u.id !== userId));
+      setUsers(users.filter(u => u.id !== deleteId));
       router.refresh();
     } catch (error) {
       console.error(error);
       alert("Something went wrong");
     } finally {
       setLoadingId(null);
+      setDeleteId(null);
     }
   };
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <p className="text-slate-400">Manage user access, roles, and premium subscriptions.</p>
-        <div className="flex items-center gap-2">
-          <div className="relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" size={16} />
-            <input 
-              type="text" 
-              placeholder="Search users..." 
-              className="bg-slate-900 border border-slate-800 text-slate-200 pl-9 pr-4 py-2 rounded-lg text-sm focus:outline-none focus:border-blue-500 w-64"
-            />
-          </div>
-        </div>
-      </div>
-
       <div className="bg-slate-900 border border-slate-800 rounded-xl overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-left">
@@ -172,8 +169,8 @@ export function UserManagement({ initialUsers }: UserManagementProps) {
                             Change Role
                           </DropdownMenuSubTrigger>
                           <DropdownMenuSubContent className="bg-slate-900 border-slate-800 text-slate-200">
-                            <DropdownMenuRadioGroup 
-                              value={user.role} 
+                            <DropdownMenuRadioGroup
+                              value={user.role}
                               onValueChange={(val: string) => handleRoleChange(user.id, val)}
                             >
                               <DropdownMenuRadioItem value="FREE" className="hover:bg-slate-800 focus:bg-slate-800 cursor-pointer">Free User</DropdownMenuRadioItem>
@@ -183,9 +180,9 @@ export function UserManagement({ initialUsers }: UserManagementProps) {
                           </DropdownMenuSubContent>
                         </DropdownMenuSub>
                         <DropdownMenuSeparator className="bg-slate-800" />
-                        <DropdownMenuItem 
+                        <DropdownMenuItem
                           className="text-red-400 hover:bg-red-500/10 focus:bg-red-500/10 cursor-pointer"
-                          onClick={() => handleDelete(user.id)}
+                          onClick={() => setDeleteId(user.id)}
                         >
                           <Trash2 size={16} className="mr-2" />
                           Delete User
@@ -199,6 +196,23 @@ export function UserManagement({ initialUsers }: UserManagementProps) {
           </table>
         </div>
       </div>
+
+      <AlertDialog open={!!deleteId} onOpenChange={() => setDeleteId(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This action cannot be undone. This will permanently delete the user account.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={handleDelete} className="bg-red-600 hover:bg-red-700">
+              {loadingId ? "Deleting..." : "Delete User"}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }

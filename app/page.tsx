@@ -3,42 +3,31 @@ import { Footer } from "@/components/footer";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { auth } from "@/lib/auth";
-import prisma from "@/lib/prisma";
 import { ArrowRight, Users, Shield } from "lucide-react";
-import { HeroChart } from "@/components/hero-visuals";
 import { PostCard } from "@/components/post-card";
-import { Post } from "@/lib/generated/client/client";
-
 import { TermsSection } from "@/components/terms-section";
+import { getFeaturedPosts, getTerms } from "@/lib/prisma-queries";
+import dynamic from "next/dynamic";
+
+// Lazy load the chart component
+const HeroChart = dynamic(() => import("@/components/hero-visuals").then(mod => ({ default: mod.HeroChart })), {
+  loading: () => <div className="h-96 bg-muted rounded-lg animate-pulse" />,
+  ssr: true,
+});
+
+export const metadata = {
+  title: "4EXPEDIA - ICT Trading Strategy",
+  description: "Master the ICT Strategy and improve your trading skills",
+};
 
 export default async function Home() {
   const session = await auth();
-  const posts = await prisma.post.findMany({
-    take: 6,
-    orderBy: { createdAt: "desc" },
-    select: {
-      id: true,
-      title: true,
-      content: true,
-      featuredImage: true,
-      category: true,
-      createdAt: true,
-      author: {
-        select: { name: true, image: true },
-      },
-    },
-  });
-
-  const terms = await prisma.term.findMany({
-    orderBy: { term: 'asc' },
-    select: {
-      id: true,
-      term: true,
-      definition: true,
-      category: true,
-      content: true,
-    }
-  });
+  
+  // Parallel data fetching
+  const [posts, terms] = await Promise.all([
+    getFeaturedPosts(6),
+    getTerms(),
+  ]);
 
   const termsData = terms.map(term => ({
     id: term.id,
@@ -56,44 +45,44 @@ export default async function Home() {
         <section className="relative pt-12 pb-20 overflow-hidden bg-background">
           <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1611974765270-ca12586343bb?q=80&w=2000&auto=format&fit=crop')] bg-cover bg-center opacity-5"></div>
           <div className="absolute inset-0 bg-gradient-to-b from-background via-background/80 to-background"></div>
-          
+
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 grid lg:grid-cols-2 gap-12 items-center">
             <div>
-              <h1 className="text-4xl md:text-6xl font-extrabold text-foreground leading-tight mb-6">
+              <h1 className="text-4xl md:text-6xl font-extrabold text-foreground leading-tight mb-6 animate-fade-in-up text-balance">
                 Master the <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-emerald-500">ICT</span> Strategy.
               </h1>
-              <p className="text-lg text-muted-foreground mb-8 max-w-lg leading-relaxed">
+              <p className="text-lg text-muted-foreground mb-8 max-w-lg leading-relaxed animate-fade-in-up delay-100 text-balance">
                 Та өөрийн арилжааны ур чадвараа сайжруулж, ICT аргачлалыг ашиглан зах зээлийг хэрхэн шинжлэх талаар суралцаарай.
               </p>
-              
-              <div className="flex flex-wrap gap-4">
+
+              <div className="flex flex-wrap gap-4 animate-fade-in-up delay-200">
                 {!session ? (
                   <Link href="/signup">
-                    <button className="px-8 py-3.5 bg-blue-600 hover:bg-blue-500 text-white rounded-xl font-bold transition-all shadow-xl shadow-blue-900/20 flex items-center gap-2">
+                    <Button variant="premium" size="lg" className="rounded-xl font-bold flex items-center gap-2">
                       Бүртгүүлэх <ArrowRight size={18} />
-                    </button>
+                    </Button>
                   </Link>
                 ) : session.user.role === "FREE" ? (
                   <Link href="/membership">
-                    <button className="px-8 py-3.5 bg-blue-600 hover:bg-blue-500 text-white rounded-xl font-bold transition-all shadow-xl shadow-blue-900/20 flex items-center gap-2">
+                    <Button variant="premium" size="lg" className="rounded-xl font-bold flex items-center gap-2">
                       Гишүүн болох <ArrowRight size={18} />
-                    </button>
+                    </Button>
                   </Link>
                 ) : (
                   <Link href="/profile">
-                    <button className="px-8 py-3.5 bg-blue-600 hover:bg-blue-500 text-white rounded-xl font-bold transition-all shadow-xl shadow-blue-900/20 flex items-center gap-2">
+                    <Button variant="premium" size="lg" className="rounded-xl font-bold flex items-center gap-2">
                       Профайл <ArrowRight size={18} />
-                    </button>
+                    </Button>
                   </Link>
                 )}
                 <Link href="/posts">
-                  <button className="px-8 py-3.5 bg-card hover:bg-accent text-foreground rounded-xl font-bold transition-all border border-border shadow-sm">
+                  <Button variant="outline" size="lg" className="rounded-xl font-bold border-border shadow-sm">
                     Нийтлэл
-                  </button>
+                  </Button>
                 </Link>
               </div>
-              
-              <div className="mt-10 flex items-center gap-6 text-sm text-muted-foreground font-medium">
+
+              <div className="mt-10 flex items-center gap-6 text-sm text-muted-foreground font-medium animate-fade-in-up delay-300">
                 <div className="flex items-center gap-2">
                   <Users size={18} /> 100+ Гишүүд
                 </div>

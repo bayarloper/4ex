@@ -15,6 +15,16 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 
 interface AdminTermsProps {
   terms: Term[];
@@ -25,6 +35,7 @@ export function AdminTerms({ terms }: AdminTermsProps) {
   const [selectedCategory, setSelectedCategory] = useState<string>("All");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingTerm, setEditingTerm] = useState<Term | null>(null);
+  const [deleteTermId, setDeleteTermId] = useState<string | null>(null);
   const [editorContent, setEditorContent] = useState("");
   const [isLoadingContent, setIsLoadingContent] = useState(false);
 
@@ -184,11 +195,7 @@ export function AdminTerms({ terms }: AdminTermsProps) {
                         <Button
                           size="icon"
                           variant="ghost"
-                          onClick={() => {
-                            if (confirm("Are you sure you want to delete this term?")) {
-                              deleteTerm(term.id);
-                            }
-                          }}
+                          onClick={() => setDeleteTermId(term.id)}
                           className="h-8 w-8 text-slate-400 hover:text-red-400 hover:bg-red-400/10"
                         >
                           <Trash2 size={16} />
@@ -203,6 +210,31 @@ export function AdminTerms({ terms }: AdminTermsProps) {
         )}
       </div>
 
+      <AlertDialog open={!!deleteTermId} onOpenChange={() => setDeleteTermId(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This action cannot be undone. This will permanently delete the term.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={() => {
+                if (deleteTermId) {
+                  deleteTerm(deleteTermId);
+                  setDeleteTermId(null);
+                }
+              }}
+              className="bg-red-600 hover:bg-red-700"
+            >
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
       {/* Modal Overlay */}
       {isModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-in fade-in duration-200">
@@ -215,7 +247,7 @@ export function AdminTerms({ terms }: AdminTermsProps) {
                 <X size={20} />
               </Button>
             </div>
-            
+
             <div className="p-6">
               <form
                 action={async (formData) => {

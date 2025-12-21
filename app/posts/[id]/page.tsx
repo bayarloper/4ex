@@ -82,7 +82,7 @@ export default async function PostPage({
   const isFreeUser = !session || session.user.role === "FREE";
   const isAdmin = session?.user.role === "ADMIN";
   const shouldShowPreview = isFreeUser && !isAdmin;
-  
+
   // Create preview content (first ~300 characters)
   let previewContent = post.content;
   if (shouldShowPreview) {
@@ -109,10 +109,10 @@ export default async function PostPage({
         <article className="bg-card border border-border rounded-xl p-6 sm:p-10 relative shadow-sm">
           {post.featuredImage && (
             <div className="relative h-64 sm:h-96 w-full mb-8 rounded-lg overflow-hidden bg-muted">
-              <Image 
-                src={post.featuredImage} 
-                alt={post.title} 
-                fill 
+              <Image
+                src={post.featuredImage}
+                alt={post.title}
+                fill
                 className="object-cover"
               />
             </div>
@@ -128,7 +128,7 @@ export default async function PostPage({
             <span>•</span>
             <span>{new Date(post.createdAt).toLocaleDateString(undefined, { dateStyle: "long" })}</span>
           </div>
-          
+
           {shouldShowPreview ? (
             <>
               <div className="relative">
@@ -137,12 +137,12 @@ export default async function PostPage({
                 </div>
                 <div className="absolute bottom-0 left-0 right-0 h-64 bg-gradient-to-t from-card via-card/90 to-transparent" />
               </div>
-              
+
               <div className="mt-8 text-center border-t border-border pt-8">
                 <div className="bg-muted/50 rounded-xl border border-border p-8 max-w-md mx-auto shadow-sm">
                   <h3 className="text-xl font-bold mb-2 text-foreground">🔒 Гишүүдэд зориулсан контент</h3>
                   <p className="text-muted-foreground mb-6">
-                    {session ? 
+                    {session ?
                       "Төлбөртэй гишүүд нийтлэлийн бүрэн хувилбарыг унших боломжтой." :
                       "Төлбөртэй гишүүд нийтлэлийн бүрэн хувилбарыг унших боломжтой."
                     }

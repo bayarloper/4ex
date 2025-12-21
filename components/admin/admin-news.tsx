@@ -10,6 +10,16 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
@@ -21,12 +31,11 @@ export function AdminNews({ posts }: AdminNewsProps) {
   const router = useRouter();
   const [deletingId, setDeletingId] = useState<string | null>(null);
 
-  const handleDelete = async (id: string) => {
-    if (!confirm("Are you sure you want to delete this post?")) return;
-    
-    setDeletingId(id);
+  const handleDelete = async () => {
+    if (!deletingId) return;
+
     try {
-      const res = await fetch(`/api/posts/${id}`, {
+      const res = await fetch(`/api/posts/${deletingId}`, {
         method: "DELETE",
       });
 
@@ -55,7 +64,7 @@ export function AdminNews({ posts }: AdminNewsProps) {
             Drafts
           </button>
         </div>
-        
+
         <div className="flex items-center gap-2">
           <Button variant="outline" size="sm" className="bg-slate-900 border-slate-800 text-slate-300 hover:bg-slate-800 hover:text-white">
             <Filter size={16} className="mr-2" /> Filter
@@ -131,13 +140,12 @@ export function AdminNews({ posts }: AdminNewsProps) {
                             <Edit size={16} className="mr-2" /> Edit
                           </DropdownMenuItem>
                         </Link>
-                        <DropdownMenuItem 
+                        <DropdownMenuItem
                           className="text-red-400 hover:bg-red-500/10 focus:bg-red-500/10 cursor-pointer"
-                          onClick={() => handleDelete(post.id)}
-                          disabled={deletingId === post.id}
+                          onClick={() => setDeletingId(post.id)}
                         >
-                          <Trash2 size={16} className="mr-2" /> 
-                          {deletingId === post.id ? "Deleting..." : "Delete"}
+                          <Trash2 size={16} className="mr-2" />
+                          Delete
                         </DropdownMenuItem>
                       </DropdownMenuContent>
                     </DropdownMenu>
@@ -148,6 +156,23 @@ export function AdminNews({ posts }: AdminNewsProps) {
           </table>
         </div>
       </div>
+
+      <AlertDialog open={!!deletingId} onOpenChange={() => setDeletingId(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This action cannot be undone. This will permanently delete the post.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={handleDelete} className="bg-red-600 hover:bg-red-700">
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }

@@ -252,8 +252,8 @@ export function SimpleEditor({ onEditorReady, initialContent }: SimpleEditorProp
           style={{
             ...(isMobile
               ? {
-                  bottom: `calc(100% - ${height - rect.y}px)`,
-                }
+                bottom: `calc(100% - ${height - rect.y}px)`,
+              }
               : {}),
           }}
         >

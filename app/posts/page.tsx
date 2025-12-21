@@ -14,7 +14,7 @@ export default async function PostsPage({
 }) {
   const { query } = await searchParams;
   const session = await auth();
-  
+
   const posts = await prisma.post.findMany({
     where: query ? {
       OR: [
@@ -65,11 +65,10 @@ export default async function PostsPage({
                 {[1, 2, 3].map((page) => (
                   <button
                     key={page}
-                    className={`px-4 py-2 rounded-lg font-medium transition ${
-                      page === 1
-                        ? "bg-primary text-primary-foreground"
-                        : "bg-muted text-muted-foreground hover:bg-muted/80"
-                    }`}
+                    className={`px-4 py-2 rounded-lg font-medium transition ${page === 1
+                      ? "bg-primary text-primary-foreground"
+                      : "bg-muted text-muted-foreground hover:bg-muted/80"
+                      }`}
                   >
                     {page}
                   </button>

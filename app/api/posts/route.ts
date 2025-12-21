@@ -2,6 +2,7 @@ import prisma from "@/lib/prisma"
 import { NextResponse } from "next/server"
 import { auth } from "@/lib/auth"
 import { z } from "zod"
+import { getPostsWithAuthors } from "@/lib/prisma-queries"
 
 const createPostSchema = z.object({
   title: z.string().min(1, "Title is required").max(100),
@@ -11,40 +12,41 @@ const createPostSchema = z.object({
 })
 
 export async function GET() {
-  const posts = await prisma.post.findMany({
-    orderBy: { createdAt: "desc" },
-    include: {
-      author: {
-        select: {
-          id: true,
-          name: true,
-          email: true,
-          role: true,
-        }
+  try {
+    const posts = await getPostsWithAuthors()
+    return NextResponse.json(posts, {
+      headers: {
+        'Cache-Control': 'public, max-age=60, s-maxage=300, stale-while-revalidate=600'
       }
-    }
-  })
-  return NextResponse.json(posts)
+    })
+  } catch (error) {
+    console.error("Error fetching posts:", error)
+    return NextResponse.json(
+      { error: "Failed to fetch posts" },
+      { status: 500 }
+    )
+  }
 }
 
+
 export async function POST(request: Request) {
-  const session = await auth()
-  
-  if (!session || !session.user) {
-    return NextResponse.json(
-      { error: "Unauthorized" },
-      { status: 401 }
-    )
-  }
-
-  if (session.user.role !== "ADMIN") {
-    return NextResponse.json(
-      { error: "Only Admins can create posts" },
-      { status: 403 }
-    )
-  }
-
   try {
+    const session = await auth()
+    
+    if (!session?.user) {
+      return NextResponse.json(
+        { error: "Unauthorized" },
+        { status: 401 }
+      )
+    }
+
+    if (session.user.role !== "ADMIN") {
+      return NextResponse.json(
+        { error: "Only Admins can create posts" },
+        { status: 403 }
+      )
+    }
+
     const body = await request.json()
     const { title, content, featuredImage, category } = createPostSchema.parse(body)
 
@@ -61,16 +63,16 @@ export async function POST(request: Request) {
           select: {
             id: true,
             name: true,
-            email: true,
+            image: true,
             role: true,
           }
         }
       }
     })
 
-    return NextResponse.json(post)
+    return NextResponse.json(post, { status: 201 })
   } catch (error) {
-    console.error("Error creating post:", error);
+    console.error("Error creating post:", error)
     if (error instanceof z.ZodError) {
       return NextResponse.json(
         { error: error.issues[0].message },
