@@ -212,16 +212,16 @@ export type TermOrderByWithRelationInput = {
 
 export type TermWhereUniqueInput = Prisma.AtLeast<{
   id?: string
+  term?: string
   AND?: Prisma.TermWhereInput | Prisma.TermWhereInput[]
   OR?: Prisma.TermWhereInput[]
   NOT?: Prisma.TermWhereInput | Prisma.TermWhereInput[]
-  term?: Prisma.StringFilter<"Term"> | string
   definition?: Prisma.StringFilter<"Term"> | string
   content?: Prisma.StringNullableFilter<"Term"> | string | null
   category?: Prisma.StringFilter<"Term"> | string
   createdAt?: Prisma.DateTimeFilter<"Term"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Term"> | Date | string
-}, "id">
+}, "id" | "term">
 
 export type TermOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
