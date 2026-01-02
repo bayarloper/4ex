@@ -86,10 +86,7 @@ export default async function PostPage({
   // Create preview content (first ~300 characters)
   let previewContent = post.content;
   if (shouldShowPreview) {
-    const tempDiv = { innerHTML: post.content };
-    const text = post.content.replace(/<[^>]*>/g, '');
-    const previewText = text.substring(0, 300);
-    // Simple content truncation
+    // Simple content truncation - show first 2 paragraphs
     const paragraphs = post.content.split('</p>');
     previewContent = paragraphs.slice(0, 2).join('</p>') + '</p>';
   }

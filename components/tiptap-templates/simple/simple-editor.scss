@@ -10,12 +10,37 @@ body {
 }
 
 .simple-editor-wrapper {
+  --tt-toolbar-offset: 64px;
   width: 100%;
   height: 100%;
   min-height: 500px;
+  max-height: 800px;
   display: flex;
   flex-direction: column;
   background-color: var(--background);
+  border: 1px solid var(--border);
+  border-radius: 0.75rem;
+  overflow-y: auto; // Make wrapper scrollable
+  overflow-x: hidden;
+  position: relative;
+  
+  // Custom scrollbar styling
+  &::-webkit-scrollbar {
+    width: 8px;
+  }
+  
+  &::-webkit-scrollbar-track {
+    background: var(--muted);
+  }
+  
+  &::-webkit-scrollbar-thumb {
+    background: var(--border);
+    border-radius: 4px;
+    
+    &:hover {
+      background: var(--muted-foreground);
+    }
+  }
 }
 
 .simple-editor-content {
@@ -24,6 +49,30 @@ body {
   flex: 1;
   display: flex;
   flex-direction: column;
+  overflow: visible; // Don't scroll here, wrapper scrolls
+  position: relative;
+  min-height: 400px; // Ensure minimum height
+  
+  // Clip content to rounded corners at bottom
+  border-radius: 0 0 0.75rem 0.75rem;
+  
+  // Custom scrollbar styling
+  &::-webkit-scrollbar {
+    width: 8px;
+  }
+  
+  &::-webkit-scrollbar-track {
+    background: var(--muted);
+  }
+  
+  &::-webkit-scrollbar-thumb {
+    background: var(--border);
+    border-radius: 4px;
+    
+    &:hover {
+      background: var(--muted-foreground);
+    }
+  }
 }
 
 .simple-editor-content .tiptap.ProseMirror.simple-editor {

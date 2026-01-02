@@ -2,7 +2,6 @@ import { redirect } from "next/navigation";
 import { auth } from "@/lib/auth";
 import prisma from "@/lib/prisma";
 import { AdminOverview } from "@/components/admin/admin-overview";
-import { Search, Bell } from "lucide-react";
 
 export default async function AdminDashboard() {
   const session = await auth();

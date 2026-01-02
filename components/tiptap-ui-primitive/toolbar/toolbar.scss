@@ -31,15 +31,18 @@
   }
 
   &[data-variant="fixed"] {
-    position: sticky;
-    top: 0;
-    z-index: 10;
+    position: sticky !important;
+    top: var(--tt-toolbar-offset, 0) !important;
+    z-index: 200;
     width: 100%;
     min-height: var(--tt-toolbar-height);
     background: var(--tt-toolbar-bg-color);
     border-bottom: 1px solid var(--tt-toolbar-border-color);
     padding: 0.25rem 0.5rem;
     flex-wrap: wrap;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    align-self: flex-start;
+    margin: 0;
 
     @media (max-width: 480px) {
       position: absolute;
