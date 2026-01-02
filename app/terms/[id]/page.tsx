@@ -8,6 +8,31 @@ import { notFound } from "next/navigation";
 import { Navbar } from "@/components/navbar";
 import { auth } from "@/lib/auth";
 
+function escapeHtml(text: string) {
+  return text
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
+
+function previewHtml(html: string, paragraphCount: number, textFallbackChars: number) {
+  const trimmed = (html ?? "").trim();
+  if (!trimmed) return "";
+
+  // Prefer grabbing the first N paragraphs if the content is HTML-ish.
+  const paragraphs = trimmed.match(/<p[\s\S]*?<\/p>/gi);
+  if (paragraphs && paragraphs.length) {
+    return paragraphs.slice(0, paragraphCount).join("");
+  }
+
+  // Fallback: strip tags, truncate plain text, wrap as a paragraph.
+  const text = trimmed.replace(/<[^>]*>/g, "").replace(/\s+/g, " ").trim();
+  const short = text.substring(0, textFallbackChars);
+  return `<p>${escapeHtml(short)}${text.length > short.length ? "…" : ""}</p>`;
+}
+
 export async function generateMetadata({
   params,
 }: {
@@ -65,21 +90,16 @@ export default async function TermPage({
   // Check if user should see limited content
   const isFreeUser = !session || session.user.role === "FREE";
   const isAdmin = session?.user.role === "ADMIN";
-  const shouldShowPreview = isFreeUser && !isAdmin;
+  const shouldGateContent = isFreeUser && !isAdmin && !!term.content;
   
-  // Content handling
-  const content = term.content || term.definition; // Fallback to definition if no content
-  
-  // Create preview content (first ~300 characters)
-  let previewContent = content;
-  if (shouldShowPreview) {
-    const tempDiv = { innerHTML: content };
-    const text = content.replace(/<[^>]*>/g, '');
-    const previewText = text.substring(0, 300);
-    // Simple content truncation
-    const paragraphs = content.split('</p>');
-    previewContent = paragraphs.slice(0, 2).join('</p>') + '</p>';
-  }
+  // Content handling:
+  // - If term has rich `content`, that is the full article
+  // - If not, the definition is the full content (and should NOT be gated)
+  const fullHtml = term.content?.trim()
+    ? term.content
+    : `<p>${escapeHtml(term.definition ?? "")}</p>`;
+
+  const previewContent = previewHtml(fullHtml, 2, 320);
 
   return (
     <>
@@ -106,7 +126,7 @@ export default async function TermPage({
             </div>
           </div>
           
-          {shouldShowPreview ? (
+          {shouldGateContent ? (
             <>
               <div className="relative">
                 <div className="prose max-w-none dark:prose-invert">
@@ -143,7 +163,7 @@ export default async function TermPage({
             </>
           ) : (
             <div className="prose max-w-none dark:prose-invert">
-              <ReadOnlyEditor content={content} />
+              <ReadOnlyEditor content={fullHtml} />
             </div>
           )}
         </article>

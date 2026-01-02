@@ -105,6 +105,8 @@ export function useElementRect({
 
   useEffect(() => {
     if (!enabled || !isClientSide()) {
+      // Reset when disabled / SSR to avoid stale measurements leaking into layouts.
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setRect(initialRect)
       return
     }
@@ -136,6 +138,7 @@ export function useElementRect({
 
     return () => {
       cleanup.forEach((fn) => fn())
+      // Reset on cleanup so consumers don't keep a stale rect if the element is removed.
       setRect(initialRect)
     }
   }, [enabled, getTargetElement, updateRect, useResizeObserver])

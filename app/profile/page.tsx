@@ -37,17 +37,10 @@ export default async function ProfilePage() {
     day: "numeric",
   });
 
-  // Fetch user stats and posts
-  const [postsCreated, userPosts] = await Promise.all([
-    prisma.post.count({
-      where: { authorId: user.id },
-    }),
-    prisma.post.findMany({
-      where: { authorId: user.id },
-      orderBy: { createdAt: "desc" },
-      take: 10,
-    }),
-  ]);
+  // Fetch only what we display (avoid extra query work)
+  const postsCreated = await prisma.post.count({
+    where: { authorId: user.id },
+  });
 
   return (
     <>
@@ -56,7 +49,6 @@ export default async function ProfilePage() {
         <ProfileView
           user={user}
           stats={{ postsCount: postsCreated, joinDate }}
-          posts={userPosts}
         />
       </main>
       <Footer />

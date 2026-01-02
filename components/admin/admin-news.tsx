@@ -24,7 +24,15 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 interface AdminNewsProps {
-  posts: any[];
+  posts: Array<{
+    id: string;
+    title: string;
+    content?: string | null;
+    featuredImage?: string | null;
+    category?: string | null;
+    createdAt: Date;
+    author?: { name?: string | null } | null;
+  }>;
 }
 
 export function AdminNews({ posts }: AdminNewsProps) {

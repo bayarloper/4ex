@@ -16,7 +16,6 @@ export default async function AdminTermsPage({
     }
 
     const params = await searchParams;
-    const page = Number(params.page) || 1;
     const search = (params.search as string) || "";
 
     // Note: Client component AdminTerms handles complex grouping/filtering, 
@@ -54,13 +53,6 @@ export default async function AdminTermsPage({
         },
     });
 
-    // Optimize terms payload
-    const optimizedTerms = terms.map(term => ({
-        ...term,
-        content: term.content ? "..." : null,
-        hasContent: !!term.content && term.content.length > 0
-    }));
-
     return (
         <div>
             {/* Top Bar */}
@@ -88,7 +80,7 @@ export default async function AdminTermsPage({
             </div>
 
             <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
-                <AdminTerms terms={optimizedTerms} />
+                <AdminTerms terms={terms} />
             </div>
         </div>
     );

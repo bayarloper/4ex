@@ -1,11 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import Link from "next/link";
 import { Search, BookOpen, ArrowRight } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Term } from "@/lib/generated/client/client";
 import { cn } from "@/lib/utils";
 
 const CATEGORY_ORDER = [
@@ -31,43 +30,56 @@ interface TermSummary {
 
 interface TermsSectionProps {
   terms: TermSummary[];
+  className?: string;
 }
 
-export function TermsSection({ terms }: TermsSectionProps) {
+export function TermsSection({ terms, className }: TermsSectionProps) {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("Бүгд");
 
   // Get unique categories and sort them
-  const uniqueCategories = Array.from(new Set(terms.map(t => t.category)));
-  const categories = ["Бүгд", ...uniqueCategories.sort((a, b) => {
-    const indexA = CATEGORY_ORDER.indexOf(a);
-    const indexB = CATEGORY_ORDER.indexOf(b);
-    if (indexA !== -1 && indexB !== -1) return indexA - indexB;
-    if (indexA !== -1) return -1;
-    if (indexB !== -1) return 1;
-    return a.localeCompare(b);
-  })];
+  const categories = useMemo(() => {
+    const uniqueCategories = Array.from(new Set(terms.map((t) => t.category)));
+    return [
+      "Бүгд",
+      ...uniqueCategories.sort((a, b) => {
+        const indexA = CATEGORY_ORDER.indexOf(a);
+        const indexB = CATEGORY_ORDER.indexOf(b);
+        if (indexA !== -1 && indexB !== -1) return indexA - indexB;
+        if (indexA !== -1) return -1;
+        if (indexB !== -1) return 1;
+        return a.localeCompare(b);
+      }),
+    ];
+  }, [terms]);
 
   // Filter terms
-  const filteredTerms = terms.filter(term => {
-    const matchesSearch = 
-      term.term.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      term.definition.toLowerCase().includes(searchQuery.toLowerCase());
-    
-    const matchesCategory = selectedCategory === "Бүгд" || term.category === selectedCategory;
+  const filteredTerms = useMemo(() => {
+    const q = searchQuery.trim().toLowerCase();
+    return terms.filter((term) => {
+      const matchesSearch =
+        !q ||
+        term.term.toLowerCase().includes(q) ||
+        term.definition.toLowerCase().includes(q);
 
-    return matchesSearch && matchesCategory;
-  });
+      const matchesCategory =
+        selectedCategory === "Бүгд" || term.category === selectedCategory;
+
+      return matchesSearch && matchesCategory;
+    });
+  }, [terms, searchQuery, selectedCategory]);
 
   // Group for display if "Бүгд" is selected, otherwise just list
-  const groupedTerms = filteredTerms.reduce((acc, term) => {
-    if (!acc[term.category]) acc[term.category] = [];
-    acc[term.category].push(term);
-    return acc;
-  }, {} as Record<string, TermSummary[]>);
+  const groupedTerms = useMemo(() => {
+    return filteredTerms.reduce((acc, term) => {
+      if (!acc[term.category]) acc[term.category] = [];
+      acc[term.category].push(term);
+      return acc;
+    }, {} as Record<string, TermSummary[]>);
+  }, [filteredTerms]);
 
   return (
-    <section className="py-24 bg-background relative overflow-hidden">
+    <section className={cn("py-24 bg-background relative overflow-hidden", className)}>
       {/* Background decoration */}
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full max-w-7xl pointer-events-none">
         <div className="absolute top-20 left-10 w-72 h-72 bg-blue-500/5 rounded-full blur-3xl" />

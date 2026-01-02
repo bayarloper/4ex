@@ -86,6 +86,37 @@ export async function getTerms() {
 }
 
 /**
+ * Get terms for homepage (lightweight): avoids pulling full `content` blobs.
+ * Returns the exact shape the homepage needs.
+ */
+export async function getTermsSummary() {
+  const [terms, withContent] = await Promise.all([
+    prisma.term.findMany({
+      orderBy: { term: "asc" },
+      select: {
+        id: true,
+        term: true,
+        definition: true,
+        category: true,
+      },
+    }),
+    prisma.term.findMany({
+      select: { id: true },
+      where: {
+        content: { not: null },
+      },
+    }),
+  ])
+
+  const contentIds = new Set(withContent.map((t) => t.id))
+
+  return terms.map((t) => ({
+    ...t,
+    hasContent: contentIds.has(t.id),
+  }))
+}
+
+/**
  * Get term by ID
  */
 export async function getTermById(id: string) {

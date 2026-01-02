@@ -4,7 +4,7 @@ import { signOut, useSession } from "next-auth/react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import Image from "next/image";
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect } from "react";
 import { Menu, X, LogOut, ChevronRight, Shield } from "lucide-react";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { usePathname } from "next/navigation";
@@ -23,15 +23,26 @@ export function Navbar() {
   const pathname = usePathname();
 
   useEffect(() => {
+    let raf = 0;
     const handleScroll = () => {
-      setScrolled(window.scrollY > 20);
+      if (raf) return;
+      raf = window.requestAnimationFrame(() => {
+        raf = 0;
+        const next = window.scrollY > 20;
+        setScrolled((prev) => (prev === next ? prev : next));
+      });
     };
-    
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
+
+    handleScroll();
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => {
+      if (raf) window.cancelAnimationFrame(raf);
+      window.removeEventListener("scroll", handleScroll);
+    };
   }, []);
 
-  const isActive = useMemo(() => (path: string) => pathname === path, [pathname]);
+  // Simple function to check if path is active - no need for useMemo
+  const isActive = (path: string) => pathname === path;
 
   return (
     <header

@@ -4,16 +4,8 @@ import type { NextRequest } from "next/server";
 // Export runtime config to use Node.js runtime instead of Edge
 export const config = {
   runtime: 'nodejs',
-  matcher: [
-    /*
-     * Match all request paths except for:
-     * - _next/static (static files)
-     * - _next/image (image optimization files)
-     * - favicon.ico (favicon file)
-     * - public folder
-     */
-    "/((?!_next/static|_next/image|favicon.ico|public/).*)",
-  ],
+  // IMPORTANT: Keep middleware scope narrow; `auth()` is expensive.
+  matcher: ["/admin/:path*", "/profile/:path*", "/signin", "/signup"],
 };
 
 export async function middleware(request: NextRequest) {

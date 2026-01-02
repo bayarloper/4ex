@@ -1,13 +1,13 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useRef, useEffect } from "react";
 import { Term } from "@/lib/generated/client/client";
 import { createTerm, deleteTerm, updateTerm, getTerm } from "@/app/actions/terms";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Plus, Trash2, Edit2, X, Save, Search, Filter, Loader2 } from "lucide-react";
-import { SimpleEditor } from "@/components/tiptap-templates/simple/simple-editor";
+import { Plus, Trash2, Edit2, X, Search, Filter, Loader2 } from "lucide-react";
+import { ModernEditor } from "@/components/tiptap-templates/simple/modern-editor";
 import { Editor } from "@tiptap/react";
 import {
   DropdownMenu,
@@ -38,6 +38,9 @@ export function AdminTerms({ terms }: AdminTermsProps) {
   const [deleteTermId, setDeleteTermId] = useState<string | null>(null);
   const [editorContent, setEditorContent] = useState("");
   const [isLoadingContent, setIsLoadingContent] = useState(false);
+  const updateTimeout = useRef<NodeJS.Timeout | null>(null);
+  const editorRef = useRef<Editor | null>(null);
+  const editorUpdateHandlerRef = useRef<(() => void) | null>(null);
 
   // Get unique categories
   const categories = useMemo(() => {
@@ -69,10 +72,39 @@ export function AdminTerms({ terms }: AdminTermsProps) {
   }, [filteredTerms]);
 
   const handleEditorReady = (editor: Editor) => {
-    editor.on("update", () => {
-      setEditorContent(editor.getHTML());
-    });
+    // Prevent accumulating listeners if the editor instance changes or this is called multiple times.
+    if (editorRef.current === editor && editorUpdateHandlerRef.current) return;
+
+    if (editorRef.current && editorUpdateHandlerRef.current) {
+      editorRef.current.off("update", editorUpdateHandlerRef.current);
+    }
+
+    const onUpdate = () => {
+      if (updateTimeout.current) {
+        clearTimeout(updateTimeout.current);
+      }
+      updateTimeout.current = setTimeout(() => {
+        setEditorContent(editor.getHTML());
+      }, 150);
+    };
+
+    editorRef.current = editor;
+    editorUpdateHandlerRef.current = onUpdate;
+    editor.on("update", onUpdate);
   };
+
+  useEffect(() => {
+    return () => {
+      if (updateTimeout.current) {
+        clearTimeout(updateTimeout.current);
+      }
+
+      if (editorRef.current && editorUpdateHandlerRef.current) {
+        editorRef.current.off("update", editorUpdateHandlerRef.current);
+      }
+      editorUpdateHandlerRef.current = null;
+    };
+  }, []);
 
   const openAddModal = () => {
     setEditingTerm(null);
@@ -310,7 +342,7 @@ export function AdminTerms({ terms }: AdminTermsProps) {
                         <Loader2 className="animate-spin text-blue-500" size={32} />
                       </div>
                     ) : (
-                      <SimpleEditor
+                      <ModernEditor
                         onEditorReady={handleEditorReady}
                         initialContent={editorContent}
                       />

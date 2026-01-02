@@ -15,10 +15,6 @@ interface MenuNavigationOptions<T> {
    */
   containerRef?: React.RefObject<HTMLElement | null>
   /**
-   * Search query that affects the selected item.
-   */
-  query?: string
-  /**
    * Array of items to navigate through.
    */
   items: T[]
@@ -54,7 +50,6 @@ interface MenuNavigationOptions<T> {
 export function useMenuNavigation<T>({
   editor,
   containerRef,
-  query,
   items,
   onSelect,
   onClose,
@@ -182,12 +177,6 @@ export function useMenuNavigation<T>({
     onClose,
     orientation,
   ])
-
-  useEffect(() => {
-    if (query) {
-      setSelectedIndex(autoSelectFirstItem ? 0 : -1)
-    }
-  }, [query, autoSelectFirstItem])
 
   return {
     selectedIndex: items.length ? selectedIndex : undefined,

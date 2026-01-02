@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Editor, EditorContent, EditorContext, useEditor } from "@tiptap/react";
 
 // --- Tiptap Core Extensions ---
@@ -12,6 +12,7 @@ import { Typography } from "@tiptap/extension-typography";
 import { Highlight } from "@tiptap/extension-highlight";
 import { Subscript } from "@tiptap/extension-subscript";
 import { Superscript } from "@tiptap/extension-superscript";
+import { Placeholder } from "@tiptap/extension-placeholder";
 import { Selection } from "@tiptap/extensions";
 
 // --- UI Primitives ---
@@ -69,8 +70,6 @@ import { handleImageUpload, MAX_FILE_SIZE } from "@/lib/tiptap-utils";
 
 // --- Styles ---
 import "@/components/tiptap-templates/simple/simple-editor.scss";
-
-import content from "@/components/tiptap-templates/simple/data/content.json";
 
 const MainToolbarContent = ({
   onHighlighterClick,
@@ -184,7 +183,12 @@ export function SimpleEditor({ onEditorReady, initialContent }: SimpleEditorProp
   const [mobileView, setMobileView] = useState<"main" | "highlighter" | "link">(
     "main"
   );
-  const toolbarRef = useRef<HTMLDivElement>(null);
+  const [toolbarEl, setToolbarEl] = useState<HTMLDivElement | null>(null);
+  const [overlayHeight, setOverlayHeight] = useState(0);
+  const toolbarRef = useCallback((node: HTMLDivElement | null) => {
+    setToolbarEl(node);
+    if (node) setOverlayHeight(node.getBoundingClientRect().height);
+  }, []);
 
   const editor = useEditor({
     immediatelyRender: false,
@@ -211,6 +215,9 @@ export function SimpleEditor({ onEditorReady, initialContent }: SimpleEditorProp
       TaskList,
       TaskItem.configure({ nested: true }),
       Highlight.configure({ multicolor: true }),
+      Placeholder.configure({
+        placeholder: "Энд нийтлэлийн агуулгаа бичнэ үү…",
+      }),
       Image,
       Typography,
       Superscript,
@@ -224,19 +231,21 @@ export function SimpleEditor({ onEditorReady, initialContent }: SimpleEditorProp
         onError: (error) => console.error("Upload failed:", error),
       }),
     ],
-    content: initialContent || content,
-  });
-
-  const rect = useCursorVisibility({
-    editor,
-    overlayHeight: toolbarRef.current?.getBoundingClientRect().height ?? 0,
+    content: initialContent || "",
   });
 
   useEffect(() => {
-    if (!isMobile && mobileView !== "main") {
-      setMobileView("main");
-    }
-  }, [isMobile, mobileView]);
+    if (!toolbarEl || typeof ResizeObserver === "undefined") return;
+    const ro = new ResizeObserver(() => {
+      setOverlayHeight(toolbarEl.getBoundingClientRect().height);
+    });
+    ro.observe(toolbarEl);
+    return () => ro.disconnect();
+  }, [toolbarEl]);
+
+  const rect = useCursorVisibility({ editor, overlayHeight });
+
+  const mobileViewEffective = isMobile ? mobileView : "main";
 
   useEffect(() => {
     if (editor && onEditorReady) {
@@ -249,6 +258,7 @@ export function SimpleEditor({ onEditorReady, initialContent }: SimpleEditorProp
       <EditorContext.Provider value={{ editor }}>
         <Toolbar
           ref={toolbarRef}
+          variant="fixed"
           style={{
             ...(isMobile
               ? {
@@ -257,7 +267,7 @@ export function SimpleEditor({ onEditorReady, initialContent }: SimpleEditorProp
               : {}),
           }}
         >
-          {mobileView === "main" ? (
+          {mobileViewEffective === "main" ? (
             <MainToolbarContent
               onHighlighterClick={() => setMobileView("highlighter")}
               onLinkClick={() => setMobileView("link")}
@@ -265,7 +275,7 @@ export function SimpleEditor({ onEditorReady, initialContent }: SimpleEditorProp
             />
           ) : (
             <MobileToolbarContent
-              type={mobileView === "highlighter" ? "highlighter" : "link"}
+              type={mobileViewEffective === "highlighter" ? "highlighter" : "link"}
               onBack={() => setMobileView("main")}
             />
           )}

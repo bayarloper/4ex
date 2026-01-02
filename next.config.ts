@@ -30,32 +30,45 @@ const nextConfig: NextConfig = {
   // Headers for caching
   async headers() {
     return [
+      // Security headers (do NOT globally disable caching; let Next handle it per-route)
       {
         source: '/:path*',
         headers: [
-          {
-            key: 'X-Content-Type-Options',
-            value: 'nosniff'
-          },
-          {
-            key: 'X-Frame-Options',
-            value: 'SAMEORIGIN'
-          },
-          {
-            key: 'Cache-Control',
-            value: 'public, max-age=3600, must-revalidate'
-          }
-        ]
+          { key: 'X-Content-Type-Options', value: 'nosniff' },
+          { key: 'X-Frame-Options', value: 'SAMEORIGIN' },
+        ],
+      },
+      // Never cache API responses
+      {
+        source: '/api/:path*',
+        headers: [{ key: 'Cache-Control', value: 'no-store' }],
+      },
+      // Never cache authenticated / role-gated pages
+      {
+        source: '/admin/:path*',
+        headers: [{ key: 'Cache-Control', value: 'private, no-store' }],
+      },
+      {
+        source: '/profile/:path*',
+        headers: [{ key: 'Cache-Control', value: 'private, no-store' }],
+      },
+      {
+        source: '/terms/:path*',
+        headers: [{ key: 'Cache-Control', value: 'private, no-store' }],
+      },
+      // Long-term cache for immutable static assets
+      {
+        source: '/_next/static/:path*',
+        headers: [
+          { key: 'Cache-Control', value: 'public, max-age=31536000, immutable' },
+        ],
       },
       {
         source: '/images/:path*',
         headers: [
-          {
-            key: 'Cache-Control',
-            value: 'public, max-age=31536000, immutable'
-          }
-        ]
-      }
+          { key: 'Cache-Control', value: 'public, max-age=31536000, immutable' },
+        ],
+      },
     ]
   }
 };

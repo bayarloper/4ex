@@ -3,17 +3,11 @@ import { Footer } from "@/components/footer";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { auth } from "@/lib/auth";
-import { ArrowRight, Users, Shield } from "lucide-react";
+import { ArrowRight, Users, Shield, Send, Globe } from "lucide-react";
 import { PostCard } from "@/components/post-card";
 import { TermsSection } from "@/components/terms-section";
-import { getFeaturedPosts, getTerms } from "@/lib/prisma-queries";
-import dynamic from "next/dynamic";
-
-// Lazy load the chart component
-const HeroChart = dynamic(() => import("@/components/hero-visuals").then(mod => ({ default: mod.HeroChart })), {
-  loading: () => <div className="h-96 bg-muted rounded-lg animate-pulse" />,
-  ssr: true,
-});
+import { getFeaturedPosts, getTermsSummary } from "@/lib/prisma-queries";
+import { HeroChart } from "@/components/hero-visuals";
 
 export const metadata = {
   title: "4EXPEDIA - ICT Trading Strategy",
@@ -26,16 +20,10 @@ export default async function Home() {
   // Parallel data fetching
   const [posts, terms] = await Promise.all([
     getFeaturedPosts(6),
-    getTerms(),
+    getTermsSummary(),
   ]);
 
-  const termsData = terms.map(term => ({
-    id: term.id,
-    term: term.term,
-    definition: term.definition,
-    category: term.category,
-    hasContent: !!term.content && term.content.length > 0
-  }));
+  const termsData = terms;
 
   return (
     <>
@@ -43,7 +31,8 @@ export default async function Home() {
       <main className="min-h-screen bg-background">
         {/* Hero Section */}
         <section className="relative pt-12 pb-20 overflow-hidden bg-background">
-          <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1611974765270-ca12586343bb?q=80&w=2000&auto=format&fit=crop')] bg-cover bg-center opacity-5"></div>
+          {/* Avoid remote hero background images (extra request + can delay LCP) */}
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,#3b82f61a,transparent_55%),radial-gradient(circle_at_bottom,#10b9811a,transparent_55%)]"></div>
           <div className="absolute inset-0 bg-gradient-to-b from-background via-background/80 to-background"></div>
 
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 grid lg:grid-cols-2 gap-12 items-center">
@@ -98,12 +87,100 @@ export default async function Home() {
           </div>
         </section>
 
+        {/* Community Section (below hero) */}
+        <section className="py-12 bg-muted/30 border-y border-border/50">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="relative bg-card/50 backdrop-blur-sm border border-border rounded-2xl p-6 md:p-8 shadow-2xl overflow-hidden">
+              <div className="relative z-10 grid gap-6 md:grid-cols-[1.2fr_0.8fr] items-start">
+                <div>
+                  <p className="text-muted-foreground text-xs font-bold tracking-wider">
+                    Санал болгож буй
+                  </p>
+                  <h2 id="community-title" className="text-2xl md:text-3xl font-extrabold text-foreground mt-1 leading-tight">
+                    <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-emerald-500">
+                      Maru
+                    </span>{" "}
+                    Community
+                  </h2>
+                  <p className="text-sm text-muted-foreground mt-2 leading-relaxed">
+                    Бид зөвхөн арилжаа хийдэггүй — бид хамтдаа хөгждөг.
+                  </p>
+
+                  <p className="text-sm text-muted-foreground leading-relaxed mt-4">
+                    ICT аргачлалаар арилжааг эхнээс нь сурах бол танд дараах community-г санал болгож байна.
+                  </p>
+
+                  <div className="mt-6 flex flex-col sm:flex-row sm:flex-wrap gap-3">
+                    <Button
+                      asChild
+                      variant="premium"
+                      size="lg"
+                      className="rounded-xl font-bold w-full sm:w-auto gap-2"
+                    >
+                      <Link
+                        href="https://t.me/Marugroupchat"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        <Send className="h-[18px] w-[18px]" />
+                        Telegram
+                      </Link>
+                    </Button>
+                    <Button
+                      asChild
+                      variant="outline"
+                      size="lg"
+                      className="rounded-xl font-bold w-full sm:w-auto bg-background/40 hover:bg-accent/60 gap-2"
+                    >
+                      <Link
+                        href="https://maru.mn"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        <Globe className="h-[18px] w-[18px]" />
+                        Maru.mn
+                      </Link>
+                    </Button>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-3 md:grid-cols-1 gap-3">
+                  <div className="rounded-xl border border-border/50 bg-background/40 backdrop-blur-sm p-3">
+                    <p className="text-[10px] text-muted-foreground font-bold tracking-widest">
+                      COMMUNITY
+                    </p>
+                    <p className="text-sm font-semibold text-foreground mt-1">
+                      Skool Platform
+                    </p>
+                  </div>
+                  <div className="rounded-xl border border-border/50 bg-background/40 backdrop-blur-sm p-3">
+                    <p className="text-[10px] text-muted-foreground font-bold tracking-widest">
+                      LEARN
+                    </p>
+                    <p className="text-sm font-semibold text-foreground mt-1">
+                      Алхам алхмаар
+                    </p>
+                  </div>
+                  <div className="rounded-xl border border-border/50 bg-background/40 backdrop-blur-sm p-3">
+                    <p className="text-[10px] text-muted-foreground font-bold tracking-widest">
+                      Q&amp;A
+                    </p>
+                    <p className="text-sm font-semibold text-foreground mt-1">
+                      Асуулт хариулт
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
         {/* Featured Posts Section */}
-        <section className="py-20 bg-muted/50">
+        <section className="py-12 bg-background">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex justify-between items-center mb-12">
               <div>
-                <h2 className="text-4xl sm:text-5xl font-bold text-foreground mb-2">
+                <h2 className="text-3xl sm:text-4xl font-bold text-foreground mb-2">
                   Нийтлэл
                 </h2>
               </div>
@@ -154,7 +231,7 @@ export default async function Home() {
         </section>
 
         {/* ICT Trading Checklist */}
-        <TermsSection terms={termsData} />
+        <TermsSection terms={termsData} className="bg-muted/30 border-t border-border/50" />
 
       </main>
 

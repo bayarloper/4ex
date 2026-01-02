@@ -1,9 +1,6 @@
-"use client";
-
 import Link from "next/link";
 import Image from "next/image";
 import { Clock } from "lucide-react";
-import { Post, User } from "@/lib/generated/client/client";
 
 interface PostCardProps {
   post: {
@@ -18,15 +15,14 @@ interface PostCardProps {
 }
 
 export function PostCard({ post }: PostCardProps) {
-  // Format date
   const formattedDate = new Date(post.createdAt).toLocaleDateString("en-US", {
     month: "short",
     day: "numeric",
     year: "numeric",
   });
 
-  // Strip HTML for summary
-  const summary = post.content.replace(/<[^>]*>/g, "").substring(0, 120) + "...";
+  const summary =
+    post.content.replace(/<[^>]*>/g, "").substring(0, 120) + "...";
 
   return (
     <Link href={`/posts/${post.id}`} className="block h-full group">

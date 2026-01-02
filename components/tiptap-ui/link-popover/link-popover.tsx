@@ -16,6 +16,7 @@ import { TrashIcon } from "@/components/tiptap-icons/trash-icon"
 // --- Tiptap UI ---
 import type { UseLinkPopoverConfig } from "@/components/tiptap-ui/link-popover"
 import { useLinkPopover } from "@/components/tiptap-ui/link-popover"
+import { isLinkActive } from "@/components/tiptap-ui/link-popover/use-link-popover"
 
 // --- UI Primitives ---
 import type { ButtonProps } from "@/components/tiptap-ui-primitive/button"
@@ -220,6 +221,7 @@ export const LinkPopover = forwardRef<HTMLButtonElement, LinkPopoverProps>(
   ) => {
     const { editor } = useTiptapEditor(providedEditor)
     const [isOpen, setIsOpen] = useState(false)
+    const [dismissedForActiveLink, setDismissedForActiveLink] = useState(false)
 
     const {
       isVisible,
@@ -242,8 +244,18 @@ export const LinkPopover = forwardRef<HTMLButtonElement, LinkPopoverProps>(
       (nextIsOpen: boolean) => {
         setIsOpen(nextIsOpen)
         onOpenChange?.(nextIsOpen)
+
+        // If the user closes while a link is active, don't auto-reopen until the link becomes inactive again.
+        if (!nextIsOpen && autoOpenOnLinkActive && isActive) {
+          setDismissedForActiveLink(true)
+        }
+
+        // Explicit user-open should always allow opening again.
+        if (nextIsOpen) {
+          setDismissedForActiveLink(false)
+        }
       },
-      [onOpenChange]
+      [autoOpenOnLinkActive, isActive, onOpenChange]
     )
 
     const handleSetLink = useCallback(() => {
@@ -255,16 +267,36 @@ export const LinkPopover = forwardRef<HTMLButtonElement, LinkPopoverProps>(
       (event: React.MouseEvent<HTMLButtonElement>) => {
         onClick?.(event)
         if (event.defaultPrevented) return
-        setIsOpen(!isOpen)
+        // User intent: allow toggling even if auto-open is enabled.
+        setDismissedForActiveLink(false)
+        setIsOpen((prev) => !prev)
       },
-      [onClick, isOpen]
+      [onClick]
     )
 
     useEffect(() => {
-      if (autoOpenOnLinkActive && isActive) {
-        setIsOpen(true)
+      if (!editor || !autoOpenOnLinkActive) return
+
+      const sync = () => {
+        const active = isLinkActive(editor)
+
+        // When link becomes inactive, clear the dismissal so future active links can auto-open again.
+        if (!active) {
+          if (dismissedForActiveLink) setDismissedForActiveLink(false)
+          return
+        }
+
+        if (!dismissedForActiveLink) {
+          setIsOpen(true)
+        }
       }
-    }, [autoOpenOnLinkActive, isActive])
+
+      editor.on("selectionUpdate", sync)
+      queueMicrotask(sync)
+      return () => {
+        editor.off("selectionUpdate", sync)
+      }
+    }, [autoOpenOnLinkActive, dismissedForActiveLink, editor])
 
     if (!isVisible) {
       return null

@@ -1,11 +1,11 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import prisma from "@/lib/prisma";
 import { Navbar } from "@/components/navbar";
 import { Footer } from "@/components/footer";
 import { auth } from "@/lib/auth";
 import { PostCard } from "@/components/post-card";
 import { SearchBar } from "@/components/search-bar";
+import prisma from "@/lib/prisma";
 
 export default async function PostsPage({
   searchParams,
@@ -15,6 +15,7 @@ export default async function PostsPage({
   const { query } = await searchParams;
   const session = await auth();
 
+  // Optimized query with proper filtering
   const posts = await prisma.post.findMany({
     where: query ? {
       OR: [
@@ -60,20 +61,6 @@ export default async function PostsPage({
                 ))}
               </div>
 
-              {/* Pagination */}
-              <div className="flex justify-center gap-2 mt-12">
-                {[1, 2, 3].map((page) => (
-                  <button
-                    key={page}
-                    className={`px-4 py-2 rounded-lg font-medium transition ${page === 1
-                      ? "bg-primary text-primary-foreground"
-                      : "bg-muted text-muted-foreground hover:bg-muted/80"
-                      }`}
-                  >
-                    {page}
-                  </button>
-                ))}
-              </div>
             </>
           ) : (
             <div className="text-center py-16">
@@ -84,7 +71,7 @@ export default async function PostsPage({
                 {query ? `We couldn't find any articles matching "${query}"` : "Check back soon for exciting content from our community."}
               </p>
               {session?.user?.role === "ADMIN" && (
-                <Link href="/">
+                <Link href="/posts/new">
                   <Button className="bg-primary text-primary-foreground">
                     Create First Article
                   </Button>

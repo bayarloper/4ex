@@ -2,12 +2,12 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { SimpleEditor } from "@/components/tiptap-templates/simple/simple-editor";
+import { ModernEditor } from "@/components/tiptap-templates/simple/modern-editor";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Editor } from "@tiptap/react";
 import { UploadButton } from "@/lib/uploadthing";
-import { X, Image as ImageIcon } from "lucide-react";
+import { X } from "lucide-react";
 import Image from "next/image";
 
 interface PostFormProps {
@@ -27,11 +27,19 @@ export function PostForm({ initialData, isEditing }: PostFormProps) {
   const [category, setCategory] = useState(initialData?.category || "Market Analysis");
   const [featuredImage, setFeaturedImage] = useState(initialData?.featuredImage || "");
   const [editor, setEditor] = useState<Editor | null>(null);
+  const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async () => {
-    if (!editor || !title) return;
+    if (!editor) return;
 
+    const contentText = editor.getText().trim();
+    if (!title.trim() || contentText.length < 20) {
+      setError("Title is required and content should be at least 20 characters.");
+      return;
+    }
+
+    setError(null);
     setLoading(true);
     try {
       const content = editor.getHTML();
@@ -44,16 +52,17 @@ export function PostForm({ initialData, isEditing }: PostFormProps) {
         body: JSON.stringify({ title, content, featuredImage, category }),
       });
 
-      if (res.ok) {
-        router.push("/posts");
-        router.refresh();
-      } else {
-        const data = await res.json();
-        alert(data.error || "Failed to save post");
+      if (!res.ok) {
+        const data = await res.json().catch(() => null);
+        setError(data?.error || "Failed to save post");
+        return;
       }
+
+      router.push("/posts");
+      router.refresh();
     } catch (error) {
       console.error("Failed to save post:", error);
-      alert("Something went wrong");
+      setError("Something went wrong while saving. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -83,10 +92,9 @@ export function PostForm({ initialData, isEditing }: PostFormProps) {
             <div className="w-full h-32 border-2 border-dashed border-border rounded-lg flex flex-col items-center justify-center bg-muted/30 hover:bg-muted/50 transition-colors">
               <UploadButton
                 endpoint="imageUploader"
-                onClientUploadComplete={(res: any) => {
-                  if (res && res[0]) {
-                    setFeaturedImage(res[0].url);
-                  }
+                onClientUploadComplete={(res?: Array<{ url: string }>) => {
+                  const first = res?.[0];
+                  if (first?.url) setFeaturedImage(first.url);
                 }}
                 onUploadError={(error: Error) => {
                   alert(`ERROR! ${error.message}`);
@@ -127,18 +135,24 @@ export function PostForm({ initialData, isEditing }: PostFormProps) {
         </div>
       </div>
 
-      <div className="border border-input rounded-lg overflow-hidden min-h-[500px] bg-background">
-        <SimpleEditor 
+      <div className="min-h-[500px]">
+        <ModernEditor 
           onEditorReady={setEditor} 
           initialContent={initialData?.content || ""} 
         />
       </div>
 
+      {error && (
+        <p className="text-sm text-destructive" role="alert" aria-live="polite">
+          {error}
+        </p>
+      )}
+
       <div className="flex justify-end gap-4">
         <Button variant="outline" onClick={() => router.back()}>
           Cancel
         </Button>
-        <Button onClick={handleSubmit} disabled={loading || !title}>
+        <Button onClick={handleSubmit} disabled={loading || !title.trim() || !editor}>
           {loading ? "Saving..." : isEditing ? "Update Post" : "Create Post"}
         </Button>
       </div>

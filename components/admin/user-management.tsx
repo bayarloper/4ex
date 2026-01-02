@@ -7,9 +7,7 @@ import {
   Trash2,
   UserCog,
   Shield,
-  Search,
 } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -52,7 +50,7 @@ export function UserManagement({ initialUsers }: UserManagementProps) {
   const [loadingId, setLoadingId] = useState<string | null>(null);
   const [deleteId, setDeleteId] = useState<string | null>(null);
 
-  const handleRoleChange = async (userId: string, newRole: string) => {
+  const handleRoleChange = async (userId: string, newRole: User["role"]) => {
     setLoadingId(userId);
     try {
       const res = await fetch(`/api/admin/users/${userId}`, {
@@ -67,7 +65,7 @@ export function UserManagement({ initialUsers }: UserManagementProps) {
         return;
       }
 
-      setUsers(users.map(u => u.id === userId ? { ...u, role: newRole as any } : u));
+      setUsers(users.map(u => u.id === userId ? { ...u, role: newRole } : u));
       router.refresh();
     } catch (error) {
       console.error(error);
@@ -171,7 +169,7 @@ export function UserManagement({ initialUsers }: UserManagementProps) {
                           <DropdownMenuSubContent className="bg-slate-900 border-slate-800 text-slate-200">
                             <DropdownMenuRadioGroup
                               value={user.role}
-                              onValueChange={(val: string) => handleRoleChange(user.id, val)}
+                              onValueChange={(val) => handleRoleChange(user.id, val as User["role"])}
                             >
                               <DropdownMenuRadioItem value="FREE" className="hover:bg-slate-800 focus:bg-slate-800 cursor-pointer">Free User</DropdownMenuRadioItem>
                               <DropdownMenuRadioItem value="MEMBER" className="hover:bg-slate-800 focus:bg-slate-800 cursor-pointer">Member</DropdownMenuRadioItem>

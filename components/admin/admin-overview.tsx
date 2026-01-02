@@ -5,8 +5,15 @@ import Link from "next/link";
 import Image from "next/image";
 
 interface AdminOverviewProps {
-  users: any[];
-  posts: any[];
+  users: Array<{ role: "FREE" | "MEMBER" | "ADMIN" }>;
+  posts: Array<{
+    id: string;
+    title: string;
+    content?: string | null;
+    featuredImage?: string | null;
+    category?: string | null;
+    createdAt?: Date;
+  }>;
 }
 
 export function AdminOverview({ users, posts }: AdminOverviewProps) {
@@ -71,7 +78,7 @@ export function AdminOverview({ users, posts }: AdminOverviewProps) {
           </div>
 
           <div className="divide-y divide-slate-800">
-            {posts.slice(0, 5).map((post: any) => (
+            {posts.slice(0, 5).map((post) => (
               <div key={post.id} className="p-4 hover:bg-slate-800/50 transition-colors flex items-center gap-4">
                 <div className="w-16 h-16 bg-slate-800 rounded-lg flex-shrink-0 overflow-hidden relative">
                   {post.featuredImage ? (

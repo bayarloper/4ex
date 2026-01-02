@@ -15,12 +15,17 @@ import { SignOutButton } from "@/components/sign-out-button";
 import Link from "next/link";
 
 interface ProfileViewProps {
-  user: any;
+  user: {
+    id: string;
+    name?: string | null;
+    email?: string | null;
+    image?: string | null;
+    role: "FREE" | "MEMBER" | "ADMIN";
+  };
   stats: {
     postsCount: number;
     joinDate: string;
   };
-  posts: any[];
 }
 
 export function ProfileView({ user, stats }: ProfileViewProps) {
@@ -44,7 +49,7 @@ export function ProfileView({ user, stats }: ProfileViewProps) {
                 {user.image ? (
                   <Image
                     src={user.image}
-                    alt={user.name}
+                    alt={user.name ?? "Profile"}
                     fill
                     className="object-cover"
                   />

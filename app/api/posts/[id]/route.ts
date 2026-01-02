@@ -69,7 +69,7 @@ export async function DELETE(
     })
 
     return NextResponse.json({ message: "Post deleted" })
-  } catch (error) {
+  } catch {
     return NextResponse.json(
       { error: "Internal Server Error" },
       { status: 500 }
