@@ -19,7 +19,7 @@ import "@/components/tiptap-node/heading-node/heading-node.scss";
 import "@/components/tiptap-node/paragraph-node/paragraph-node.scss";
 import "@/components/tiptap-templates/simple/simple-editor.scss";
 
-export default function ReadOnlyEditor({ content }: { content: string }) {
+export default function ReadOnlyEditor({ content, className }: { content: string; className?: string }) {
   const editor = useEditor({
     immediatelyRender: false,
     editable: false,
@@ -37,5 +37,6 @@ export default function ReadOnlyEditor({ content }: { content: string }) {
     content,
   });
 
-  return <EditorContent editor={editor} className="simple-editor-content" />;
+  const merged = ["read-only-editor-content", className].filter(Boolean).join(" ");
+  return <EditorContent editor={editor} className={merged} />;
 }

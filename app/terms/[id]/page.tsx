@@ -128,14 +128,11 @@ export default async function TermPage({
           
           {shouldGateContent ? (
             <>
-              <div className="relative">
-                <div className="prose max-w-none dark:prose-invert">
-                  <ReadOnlyEditor content={previewContent} />
-                </div>
-                <div className="absolute bottom-0 left-0 right-0 h-64 bg-gradient-to-t from-card via-card/90 to-transparent" />
+              <div className="prose max-w-none dark:prose-invert">
+                <ReadOnlyEditor content={previewContent} className="compact" />
               </div>
               
-              <div className="mt-8 text-center border-t border-border pt-8">
+              <div className="mt-4 text-center border-t border-border pt-4">
                 <div className="bg-muted/50 rounded-xl border border-border p-8 max-w-md mx-auto shadow-sm">
                   <h3 className="text-xl font-bold mb-2 text-foreground">🔒 Гишүүдэд зориулсан контент</h3>
                   <p className="text-muted-foreground mb-6">

@@ -49,12 +49,8 @@ body {
   flex: 1;
   display: flex;
   flex-direction: column;
-  overflow: visible; // Don't scroll here, wrapper scrolls
+  overflow: visible;
   position: relative;
-  min-height: 400px; // Ensure minimum height
-  
-  // Clip content to rounded corners at bottom
-  border-radius: 0 0 0.75rem 0.75rem;
   
   // Custom scrollbar styling
   &::-webkit-scrollbar {
@@ -75,6 +71,29 @@ body {
   }
 }
 
+/* Compact variant for previews with Medium-style blur fade */
+.simple-editor-content.compact {
+  max-height: 180px;
+  overflow: hidden;
+  position: relative;
+  
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 30px;
+    background: linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.08) 50%, rgba(0, 0, 0, 0.12) 100%);
+    backdrop-filter: blur(2px);
+    pointer-events: none;
+  }
+}
+
+.simple-editor-content.compact .tiptap.ProseMirror.simple-editor {
+  padding: 0;
+}
+
 .simple-editor-content .tiptap.ProseMirror.simple-editor {
   flex: 1;
   padding: 2rem;
@@ -83,6 +102,39 @@ body {
 
 .simple-editor-content .tiptap.ProseMirror.simple-editor:focus {
   outline: none;
+}
+
+/* Read-only editor styling (for public post/term display) */
+.read-only-editor-content {
+  width: 100%;
+  position: relative;
+  
+  .tiptap.ProseMirror {
+    outline: none;
+    padding: 0;
+    
+    &:focus {
+      outline: none;
+    }
+  }
+}
+
+/* Compact variant for preview with blur fade */
+.read-only-editor-content.compact {
+  max-height: 180px;
+  overflow: hidden;
+  
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 30px;
+    background: linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.08) 50%, rgba(0, 0, 0, 0.12) 100%);
+    backdrop-filter: blur(2px);
+    pointer-events: none;
+  }
 }
 
 @media screen and (max-width: 480px) {
