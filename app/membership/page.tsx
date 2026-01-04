@@ -2,7 +2,7 @@ import { Navbar } from "@/components/navbar";
 import { Card, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { CreditCard } from "lucide-react";
+import { CreditCard, Instagram } from "lucide-react";
 
 export default function MembershipPage() {
   return (
@@ -55,6 +55,17 @@ export default function MembershipPage() {
             <p className="text-xs text-center text-muted-foreground w-full mb-4">
               Асуух зүйл байвал админтай холбогдоно уу.
             </p>
+            <Link
+              href="https://instagram.com/taragtar"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-full"
+            >
+              <Button variant="outline" className="w-full gap-2">
+                <Instagram className="h-4 w-4" />
+                Instagram
+              </Button>
+            </Link>
             <Link href="/" className="w-full">
               <Button variant="outline" className="w-full">
                 Буцах

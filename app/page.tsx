@@ -10,8 +10,8 @@ import { getFeaturedPosts, getTermsSummary } from "@/lib/prisma-queries";
 import { HeroChart } from "@/components/hero-visuals";
 
 export const metadata = {
-  title: "4EXPEDIA - ICT Trading Strategy",
-  description: "Master the ICT Strategy and improve your trading skills",
+  title: "4EX.MN - Форекс ICT аргачлалын толь бичиг",
+  description: "Форекс суралцагчдын толь бичиг бөгөөд форексийн үндсэн ойлголтууд, стратеги, шинжилгээний аргуудыг хялбаршуулан тайлбарласан вэбсайт юм.",
 };
 
 export default async function Home() {

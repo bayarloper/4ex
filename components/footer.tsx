@@ -20,7 +20,7 @@ export function Footer() {
               <span className="text-lg font-bold text-foreground">Pedia</span>
             </div>
             <p className="text-muted-foreground text-sm mb-4">
-              Форекс ICT аргачлалд суурилсан мэдлэгийн сангийн платформ.
+              ICT аргачлалыг ашиглан зах зээлийг хэрхэн шинжлэх талаар суралцаарай.
             </p>
             <div className="flex space-x-4">
               <a href="#" className="text-muted-foreground hover:text-primary transition-colors">
