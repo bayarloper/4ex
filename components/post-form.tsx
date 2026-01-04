@@ -2,10 +2,9 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { ModernEditor } from "@/components/tiptap-templates/simple/modern-editor";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Editor } from "@tiptap/react";
+import { QuillEditor } from "@/components/rich-text/quill-editor";
 import { UploadButton } from "@/lib/uploadthing";
 import { X } from "lucide-react";
 import Image from "next/image";
@@ -26,14 +25,18 @@ export function PostForm({ initialData, isEditing }: PostFormProps) {
   const [title, setTitle] = useState(initialData?.title || "");
   const [category, setCategory] = useState(initialData?.category || "Market Analysis");
   const [featuredImage, setFeaturedImage] = useState(initialData?.featuredImage || "");
-  const [editor, setEditor] = useState<Editor | null>(null);
+  const [contentHtml, setContentHtml] = useState(initialData?.content || "");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
-  const handleSubmit = async () => {
-    if (!editor) return;
+  const stripHtml = (html: string) =>
+    (html || "")
+      .replace(/<[^>]*>/g, "")
+      .replace(/\s+/g, " ")
+      .trim();
 
-    const contentText = editor.getText().trim();
+  const handleSubmit = async () => {
+    const contentText = stripHtml(contentHtml);
     if (!title.trim() || contentText.length < 20) {
       setError("Title is required and content should be at least 20 characters.");
       return;
@@ -42,14 +45,13 @@ export function PostForm({ initialData, isEditing }: PostFormProps) {
     setError(null);
     setLoading(true);
     try {
-      const content = editor.getHTML();
       const url = isEditing ? `/api/posts/${initialData?.id}` : "/api/posts";
       const method = isEditing ? "PATCH" : "POST";
 
       const res = await fetch(url, {
         method,
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ title, content, featuredImage, category }),
+        body: JSON.stringify({ title, content: contentHtml, featuredImage, category }),
       });
 
       if (!res.ok) {
@@ -136,9 +138,12 @@ export function PostForm({ initialData, isEditing }: PostFormProps) {
       </div>
 
       <div className="min-h-[500px]">
-        <ModernEditor 
-          onEditorReady={setEditor} 
-          initialContent={initialData?.content || ""} 
+        <QuillEditor
+          value={contentHtml}
+          onChange={setContentHtml}
+          placeholder="Энд нийтлэлийн агуулгаа бичнэ үү…"
+          className="rounded-lg overflow-hidden border border-border"
+          minHeightClassName="min-h-[500px]"
         />
       </div>
 
@@ -152,7 +157,7 @@ export function PostForm({ initialData, isEditing }: PostFormProps) {
         <Button variant="outline" onClick={() => router.back()}>
           Cancel
         </Button>
-        <Button onClick={handleSubmit} disabled={loading || !title.trim() || !editor}>
+        <Button onClick={handleSubmit} disabled={loading || !title.trim()}>
           {loading ? "Saving..." : isEditing ? "Update Post" : "Create Post"}
         </Button>
       </div>

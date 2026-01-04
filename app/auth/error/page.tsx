@@ -1,7 +1,7 @@
 "use client";
 
 import { useSearchParams } from "next/navigation";
-import { Card, CardHeader, CardBody } from "@/components/tiptap-ui-primitive/card/card";
+import { Card, CardHeader, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Suspense } from "react";
 import Link from "next/link";
@@ -15,7 +15,7 @@ function AuthErrorContent() {
       <CardHeader className="text-center">
         <h1 className="text-2xl font-bold text-destructive">Authentication Error</h1>
       </CardHeader>
-      <CardBody className="space-y-4">
+      <CardContent className="space-y-4">
         <p className="text-center text-muted-foreground">
           {error === "OAuthSignin" && "Error constructing OAuth request"}
           {error === "OAuthCallback" && "Error handling OAuth callback"}
@@ -36,7 +36,7 @@ function AuthErrorContent() {
             <Button variant="outline">Go Home</Button>
           </Link>
         </div>
-      </CardBody>
+      </CardContent>
     </Card>
   );
 }

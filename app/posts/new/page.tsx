@@ -1,8 +1,20 @@
 import { Navbar } from "@/components/navbar";
 import { PostForm } from "@/components/post-form";
 import { Footer } from "@/components/footer";
+import { auth } from "@/lib/auth";
+import { redirect } from "next/navigation";
 
-export default function CreatePostPage() {
+export default async function CreatePostPage() {
+  const session = await auth();
+
+  if (!session) {
+    redirect("/signin?callbackUrl=/posts/new");
+  }
+
+  if (session.user.role !== "ADMIN") {
+    redirect("/");
+  }
+
   return (
     <>
       <Navbar />

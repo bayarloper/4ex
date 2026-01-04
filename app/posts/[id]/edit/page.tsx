@@ -12,7 +12,11 @@ export default async function EditPostPage({
   const { id } = await params;
   const session = await auth();
 
-  if (!session || session.user.role !== "ADMIN") {
+  if (!session) {
+    redirect(`/signin?callbackUrl=/posts/${id}/edit`);
+  }
+
+  if (session.user.role !== "ADMIN") {
     redirect("/");
   }
 

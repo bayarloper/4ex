@@ -1,5 +1,5 @@
 import { Metadata } from "next";
-import ReadOnlyEditor from "@/components/tiptap-templates/simple/read-only-editor";
+import RichTextContent from "@/components/rich-text/rich-text-content";
 import { Button } from "@/components/ui/button";
 import prisma from "@/lib/prisma";
 import Link from "next/link";
@@ -129,7 +129,7 @@ export default async function PostPage({
           {shouldShowPreview ? (
             <>
               <div className="prose max-w-none dark:prose-invert">
-                <ReadOnlyEditor content={previewContent} className="compact" />
+                <RichTextContent html={previewContent} className="compact" />
               </div>
 
               <div className="mt-4 text-center border-t border-border pt-4">
@@ -137,8 +137,8 @@ export default async function PostPage({
                   <h3 className="text-xl font-bold mb-2 text-foreground">🔒 Гишүүдэд зориулсан контент</h3>
                   <p className="text-muted-foreground mb-6">
                     {session ?
-                      "Төлбөртэй гишүүд нийтлэлийн бүрэн хувилбарыг унших боломжтой." :
-                      "Төлбөртэй гишүүд нийтлэлийн бүрэн хувилбарыг унших боломжтой."
+                      "Premium гишүүд нийтлэлийн бүрэн хувилбарыг унших боломжтой." :
+                      "Premium гишүүд нийтлэлийн бүрэн хувилбарыг унших боломжтой."
                     }
                   </p>
                   {session ? (
@@ -160,7 +160,7 @@ export default async function PostPage({
             </>
           ) : (
             <div className="prose max-w-none dark:prose-invert">
-              <ReadOnlyEditor content={post.content} />
+              <RichTextContent html={post.content} />
             </div>
           )}
         </article>
