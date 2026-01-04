@@ -7,22 +7,11 @@ export default function RichTextContent({
   html: string;
   className?: string;
 }) {
-  const isCompact = (className ?? "")
-    .split(/\s+/)
-    .filter(Boolean)
-    .includes("compact");
-
   return (
-    <div className={cn("rich-text-content ql-container ql-snow", className)}>
-      <div
-        className={cn(
-          "ql-editor",
-          // Default Quill padding is generous; keep compact previews tight.
-          isCompact ? "p-0" : undefined
-        )}
-        // Content comes from your admins.
-        dangerouslySetInnerHTML={{ __html: html ?? "" }}
-      />
-    </div>
+    <div
+      className={cn("rich-text-content", className)}
+      // Content comes from your admins.
+      dangerouslySetInnerHTML={{ __html: html ?? "" }}
+    />
   );
 }

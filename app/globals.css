@@ -2,75 +2,14 @@
 @import "../styles/_variables.scss";
 @import "../styles/_keyframe-animations.scss";
 @import "tw-animate-css";
-@import "quill/dist/quill.snow.css";
+@import "katex/dist/katex.min.css";
+@import "prism-code-editor-lightweight/layout.css";
+@import "prism-code-editor-lightweight/themes/github-dark.css";
+@import "reactjs-tiptap-editor/lib/style.css";
 
 @custom-variant dark (&:is(.dark *));
 
-/* --- Quill (rendered content) tweaks --- */
-/* Keep Quill-generated HTML semantics, but let typography/colors come from the page (e.g. `.prose`). */
-.prose .ql-container.ql-snow {
-  border: 0;
-  background: transparent;
-  color: inherit;
-}
 
-.prose .ql-snow .ql-editor {
-  padding: 0;
-  font-family: inherit;
-  font-size: inherit;
-  line-height: inherit;
-}
-
-/*
-  Some pasted HTML can carry inline font-family styles (higher priority than normal CSS).
-  For public post/term rendering, force everything to inherit the site font.
-*/
-.rich-text-content.ql-container {
-  /* Override Quill Snow defaults (Helvetica + 13px) for public rendering */
-  font-family: inherit !important;
-  font-size: inherit !important;
-  line-height: inherit;
-}
-
-/* Inline styles/classes inside the saved HTML can still force fonts; override only font-family */
-.rich-text-content .ql-editor,
-.rich-text-content .ql-editor * {
-  font-family: inherit !important;
-}
-
-.prose .ql-snow .ql-editor img {
-  max-width: 100%;
-  height: auto;
-}
-
-/* Quill editor chrome (admin/editor UI) */
-.quill-scope .ql-toolbar.ql-snow {
-  @apply border border-border rounded-t-lg bg-background;
-}
-
-.quill-scope .ql-container.ql-snow {
-  @apply border border-border border-t-0 rounded-b-lg;
-}
-
-.quill-scope .ql-editor {
-  @apply text-foreground;
-}
-
-.quill-scope .ql-snow .ql-stroke {
-  stroke: var(--foreground);
-}
-
-.quill-scope .ql-snow .ql-fill {
-  fill: var(--foreground);
-}
-
-.quill-scope .ql-snow .ql-picker {
-  color: var(--foreground);
-}
-
-.quill-scope .ql-snow .ql-picker-options {
-  @apply bg-popover border border-border;
-}
 
 @theme inline {
   --color-background: var(--background);
@@ -243,4 +182,25 @@
     opacity: 1;
     transform: translateY(0);
   }
+}
+
+/* reactjs-tiptap-editor demo-style character count */
+.character-count {
+  align-items: center;
+  color: hsl(var(--muted-foreground));
+  display: flex;
+  font-size: 0.75rem;
+  gap: 0.5rem;
+}
+
+.character-count svg {
+  color: hsl(var(--primary));
+}
+
+.character-count--warning {
+  color: hsl(var(--destructive));
+}
+
+.character-count--warning svg {
+  color: hsl(var(--destructive));
 }

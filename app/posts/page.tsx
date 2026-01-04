@@ -10,9 +10,9 @@ import prisma from "@/lib/prisma";
 export default async function PostsPage({
   searchParams,
 }: {
-  searchParams: Promise<{ query?: string }>;
+  searchParams: { query?: string };
 }) {
-  const { query } = await searchParams;
+  const { query } = searchParams;
   const session = await auth();
 
   // Optimized query with proper filtering

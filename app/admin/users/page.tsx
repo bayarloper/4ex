@@ -7,7 +7,7 @@ import { Search, Bell } from "lucide-react";
 export default async function AdminUsersPage({
     searchParams,
 }: {
-    searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+    searchParams: { [key: string]: string | string[] | undefined };
 }) {
     const session = await auth();
 
@@ -15,8 +15,7 @@ export default async function AdminUsersPage({
         redirect("/");
     }
 
-    // Await searchParams before accessing properties
-    const params = await searchParams;
+    const params = searchParams;
     const page = Number(params.page) || 1;
     const search = (params.search as string) || "";
 

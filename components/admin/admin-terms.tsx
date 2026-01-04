@@ -1,13 +1,13 @@
 "use client";
 
 import { useState, useMemo } from "react";
+import dynamic from "next/dynamic";
 import { Term } from "@/lib/generated/client/client";
 import { createTerm, deleteTerm, updateTerm, getTerm } from "@/app/actions/terms";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Plus, Trash2, Edit2, X, Search, Filter, Loader2 } from "lucide-react";
-import { QuillEditor } from "@/components/rich-text/quill-editor";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -24,6 +24,16 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+
+const TiptapEditor = dynamic(
+  () => import("@/components/rich-text/tiptap-editor").then((m) => m.TiptapEditor),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="min-h-[320px] rounded-lg border border-border bg-background" />
+    ),
+  }
+);
 
 interface AdminTermsProps {
   terms: Term[];
@@ -305,7 +315,7 @@ export function AdminTerms({ terms }: AdminTermsProps) {
                         <Loader2 className="animate-spin text-blue-500" size={32} />
                       </div>
                     ) : (
-                      <QuillEditor
+                      <TiptapEditor
                         value={editorContent}
                         onChange={setEditorContent}
                         placeholder="Энд дэлгэрэнгүй тайлбараа бичнэ үү…"

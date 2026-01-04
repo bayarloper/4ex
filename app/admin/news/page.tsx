@@ -8,7 +8,7 @@ import Link from "next/link";
 export default async function AdminNewsPage({
     searchParams,
 }: {
-    searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+    searchParams: { [key: string]: string | string[] | undefined };
 }) {
     const session = await auth();
 
@@ -16,7 +16,7 @@ export default async function AdminNewsPage({
         redirect("/");
     }
 
-    const params = await searchParams;
+    const params = searchParams;
     const page = Number(params.page) || 1;
     const search = (params.search as string) || "";
 

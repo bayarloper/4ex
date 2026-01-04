@@ -49,7 +49,7 @@ const ABOUT = {
   bio: "ICT концепцыг суурь болгон авч, хувь хүний туршлага, алдаа ба бодит кейсүүд дээр үндэслэн ойлгомжтой контент бүтээж бусдад мэдлэгээ хуваалцахаар бүтээв.",
 } as const;
 
-export function HeroAboutCard() {
+function HeroAboutCard() {
   return (
     <section className="w-full max-w-lg mx-auto">
       <div className="bg-card/50 backdrop-blur-sm border border-border rounded-2xl p-6 shadow-2xl overflow-hidden animate-fade-in-up delay-200">

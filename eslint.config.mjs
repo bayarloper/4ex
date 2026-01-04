@@ -12,6 +12,9 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+
+    // Copied upstream demo project (reference only; not part of app build)
+    "reactjs-tiptap-editor-demo-master/**",
   ]),
 ]);
 

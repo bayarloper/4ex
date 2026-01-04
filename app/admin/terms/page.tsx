@@ -7,7 +7,7 @@ import { Search, Bell } from "lucide-react";
 export default async function AdminTermsPage({
     searchParams,
 }: {
-    searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+    searchParams: { [key: string]: string | string[] | undefined };
 }) {
     const session = await auth();
 
@@ -15,7 +15,7 @@ export default async function AdminTermsPage({
         redirect("/");
     }
 
-    const params = await searchParams;
+    const params = searchParams;
     const search = (params.search as string) || "";
 
     // Note: Client component AdminTerms handles complex grouping/filtering, 

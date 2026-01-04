@@ -8,7 +8,6 @@ import prisma from "@/lib/prisma";
 const AUTHOR_SELECT = {
   id: true,
   name: true,
-  email: true,
   image: true,
   role: true,
 } as const;
@@ -24,21 +23,13 @@ export async function getPostsWithAuthors(
     take,
     skip,
     orderBy: { createdAt: "desc" },
-    include: {
-      author: {
-        select: AUTHOR_SELECT,
-      },
-    },
-  });
-}
-
-/**
- * Get single post by ID with author
- */
-export async function getPostById(id: string) {
-  return prisma.post.findUnique({
-    where: { id },
-    include: {
+    select: {
+      id: true,
+      title: true,
+      content: true,
+      featuredImage: true,
+      category: true,
+      createdAt: true,
       author: {
         select: AUTHOR_SELECT,
       },
@@ -65,22 +56,6 @@ export async function getFeaturedPosts(
       author: {
         select: { name: true, image: true },
       },
-    },
-  });
-}
-
-/**
- * Get all terms (optimized)
- */
-export async function getTerms() {
-  return prisma.term.findMany({
-    orderBy: { term: "asc" },
-    select: {
-      id: true,
-      term: true,
-      definition: true,
-      category: true,
-      content: true,
     },
   });
 }
@@ -114,27 +89,4 @@ export async function getTermsSummary() {
     ...t,
     hasContent: contentIds.has(t.id),
   }))
-}
-
-/**
- * Get term by ID
- */
-export async function getTermById(id: string) {
-  return prisma.term.findUnique({
-    where: { id },
-  });
-}
-
-/**
- * Count total posts
- */
-export async function countPosts() {
-  return prisma.post.count();
-}
-
-/**
- * Count total users
- */
-export async function countUsers() {
-  return prisma.user.count();
 }

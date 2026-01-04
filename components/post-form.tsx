@@ -2,12 +2,22 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import dynamic from "next/dynamic";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { QuillEditor } from "@/components/rich-text/quill-editor";
 import { UploadButton } from "@/lib/uploadthing";
 import { X } from "lucide-react";
 import Image from "next/image";
+
+const TiptapEditor = dynamic(
+  () => import("@/components/rich-text/tiptap-editor").then((m) => m.TiptapEditor),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="min-h-[500px] rounded-lg border border-border bg-background" />
+    ),
+  }
+);
 
 interface PostFormProps {
   initialData?: {
@@ -138,7 +148,7 @@ export function PostForm({ initialData, isEditing }: PostFormProps) {
       </div>
 
       <div className="min-h-[500px]">
-        <QuillEditor
+        <TiptapEditor
           value={contentHtml}
           onChange={setContentHtml}
           placeholder="Энд нийтлэлийн агуулгаа бичнэ үү…"
