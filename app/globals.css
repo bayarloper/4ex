@@ -57,15 +57,15 @@
 }
 
 .quill-scope .ql-snow .ql-stroke {
-  stroke: hsl(var(--foreground));
+  stroke: var(--foreground);
 }
 
 .quill-scope .ql-snow .ql-fill {
-  fill: hsl(var(--foreground));
+  fill: var(--foreground);
 }
 
 .quill-scope .ql-snow .ql-picker {
-  color: hsl(var(--foreground));
+  color: var(--foreground);
 }
 
 .quill-scope .ql-snow .ql-picker-options {
