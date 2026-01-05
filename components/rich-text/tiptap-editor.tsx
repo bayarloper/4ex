@@ -100,7 +100,7 @@ type ImageUploadServerData = {
 
 type ImageUploadResult = ClientUploadedFileData<ImageUploadServerData>;
 
-const LIMIT = 2505;
+const LIMIT = 4000;
 
 // custom document to support columns (from the demo)
 const DocumentColumn = Document.extend({
