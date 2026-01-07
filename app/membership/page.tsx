@@ -56,7 +56,7 @@ export default function MembershipPage() {
               Асуух зүйл байвал админтай холбогдоно уу.
             </p>
             <Link
-              href="https://instagram.com/taragtar"
+              href="https://instagram.com/4ex_mn"
               target="_blank"
               rel="noopener noreferrer"
               className="w-full"

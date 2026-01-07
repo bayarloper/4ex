@@ -106,7 +106,7 @@ export default async function Home() {
                     Бид зөвхөн арилжаа хийдэггүй — бид хамтдаа хөгждөг.
                   </p>
 
-                  <p className="text-sm text-muted-foreground leading-relaxed mt-4">
+                  <p className="text-sm text-muted-foreground leading-relaxed mt-2">
                     ICT аргачлалаар арилжааг эхнээс нь сурах бол танд дараах community-г санал болгож байна.
                   </p>
 
