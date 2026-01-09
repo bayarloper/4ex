@@ -141,7 +141,7 @@ export default async function TermPage({
           {shouldGateContent ? (
             <>
               <div className="prose max-w-none dark:prose-invert">
-                <RichTextContent html={previewContent} className="compact" />
+                <RichTextContent html={previewContent} className="ProseMirror compact" />
               </div>
               
               <div className="mt-4 text-center border-t border-border pt-4">
@@ -172,7 +172,7 @@ export default async function TermPage({
             </>
           ) : (
             <div className="prose max-w-none dark:prose-invert">
-              <RichTextContent html={fullHtml} />
+              <RichTextContent html={fullHtml} className="ProseMirror" />
             </div>
           )}
         </article>
