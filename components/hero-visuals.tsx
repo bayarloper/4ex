@@ -25,15 +25,6 @@ function Icon({
   );
 }
 
-function IconUser(props: { className?: string }) {
-  return (
-    <Icon className={props.className}>
-      <path d="M20 21a8 8 0 0 0-16 0" />
-      <circle cx="12" cy="7" r="4" />
-    </Icon>
-  );
-}
-
 function IconBadgeCheck(props: { className?: string }) {
   return (
     <Icon className={props.className}>

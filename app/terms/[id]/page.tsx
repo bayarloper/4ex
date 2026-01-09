@@ -21,10 +21,22 @@ function previewHtml(html: string, paragraphCount: number, textFallbackChars: nu
   const trimmed = (html ?? "").trim();
   if (!trimmed) return "";
 
-  // Prefer grabbing the first N paragraphs if the content is HTML-ish.
-  const paragraphs = trimmed.match(/<p[\s\S]*?<\/p>/gi);
-  if (paragraphs && paragraphs.length) {
-    return paragraphs.slice(0, paragraphCount).join("");
+  // Keep the original editor HTML structure and truncate after the Nth paragraph.
+  // This preserves headings/callouts/lists that may appear before/between paragraphs.
+  const closingP = /<\/p>/gi;
+  let seen = 0;
+  let cutIndex: number | null = null;
+
+  while (closingP.exec(trimmed)) {
+    seen += 1;
+    if (seen >= paragraphCount) {
+      cutIndex = closingP.lastIndex;
+      break;
+    }
+  }
+
+  if (cutIndex != null) {
+    return trimmed.slice(0, cutIndex);
   }
 
   // Fallback: strip tags, truncate plain text, wrap as a paragraph.

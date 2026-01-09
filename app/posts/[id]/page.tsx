@@ -8,6 +8,25 @@ import { Navbar } from "@/components/navbar";
 import { auth } from "@/lib/auth";
 import Image from "next/image";
 
+function previewHtml(html: string, paragraphCount: number) {
+  const trimmed = (html ?? "").trim();
+  if (!trimmed) return "";
+
+  const closingP = /<\/p>/gi;
+  let seen = 0;
+  let cutIndex: number | null = null;
+
+  while (closingP.exec(trimmed)) {
+    seen += 1;
+    if (seen >= paragraphCount) {
+      cutIndex = closingP.lastIndex;
+      break;
+    }
+  }
+
+  return cutIndex != null ? trimmed.slice(0, cutIndex) : trimmed;
+}
+
 export async function generateMetadata({
   params,
 }: {
@@ -83,13 +102,7 @@ export default async function PostPage({
   const isAdmin = session?.user.role === "ADMIN";
   const shouldShowPreview = isFreeUser && !isAdmin;
 
-  // Create preview content (first ~300 characters)
-  let previewContent = post.content;
-  if (shouldShowPreview) {
-    // Simple content truncation - show first 2 paragraphs
-    const paragraphs = post.content.split('</p>');
-    previewContent = paragraphs.slice(0, 2).join('</p>') + '</p>';
-  }
+  const previewContent = shouldShowPreview ? previewHtml(post.content, 2) : post.content;
 
   return (
     <>
