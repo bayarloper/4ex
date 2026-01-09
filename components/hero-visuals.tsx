@@ -46,7 +46,7 @@ function IconBadgeCheck(props: { className?: string }) {
 const ABOUT = {
   name: "h4x0r",
   role: "ICT Trader",
-  bio: "ICT концепцыг суурь болгон авч, хувь хүний туршлага, алдаа ба бодит кейсүүд дээр үндэслэн ойлгомжтой контент бүтээж бусдад мэдлэгээ хуваалцахаар бүтээв.",
+  bio: "ICT концепцыг суурь болгон авч, хувь хүний туршлага, алдаа ба бодит кейсүүд дээр үндэслэн контент бүтээж бусдад мэдлэгээ хуваалцахаар бүтээв.",
 } as const;
 
 function HeroAboutCard() {
@@ -54,17 +54,7 @@ function HeroAboutCard() {
     <section className="w-full max-w-lg mx-auto">
       <div className="bg-card/50 backdrop-blur-sm border border-border rounded-2xl p-6 shadow-2xl overflow-hidden animate-fade-in-up delay-200">
         <div className="flex items-start gap-3">
-          <div className="h-11 w-11 rounded-xl border border-border/60 bg-background/40 flex items-center justify-center shadow-inner shrink-0">
-            <IconUser className="h-[18px] w-[18px] text-muted-foreground" />
-          </div>
-
           <div className="min-w-0">
-            <p className="text-muted-foreground text-xs font-bold tracking-wider">
-              Миний тухай
-            </p>
-            <h3 className="text-2xl font-extrabold text-foreground mt-1 leading-tight truncate">
-              {ABOUT.name}
-            </h3>
             <div className="mt-1 inline-flex items-center gap-2 text-xs text-blue-500 font-bold">
               <IconBadgeCheck className="h-[14px] w-[14px]" />
               {ABOUT.role}
