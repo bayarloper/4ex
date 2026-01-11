@@ -7,10 +7,13 @@ import { PostCard } from "@/components/post-card";
 import { SearchBar } from "@/components/search-bar";
 import prisma from "@/lib/prisma";
 
-export default async function PostsPage(
-  { searchParams }: { searchParams?: { query?: string | string[] } } = {}
-) {
-  const queryParam = searchParams?.query;
+export default async function PostsPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+}) {
+  const params = await searchParams;
+  const queryParam = params.query;
   const query = Array.isArray(queryParam) ? queryParam[0] : queryParam;
   const session = await auth();
 
