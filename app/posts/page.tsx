@@ -7,22 +7,23 @@ import { PostCard } from "@/components/post-card";
 import { SearchBar } from "@/components/search-bar";
 import prisma from "@/lib/prisma";
 
-export default async function PostsPage({
-  searchParams,
-}: {
-  searchParams: { query?: string };
-}) {
-  const { query } = searchParams;
+export default async function PostsPage(
+  { searchParams }: { searchParams?: { query?: string | string[] } } = {}
+) {
+  const queryParam = searchParams?.query;
+  const query = Array.isArray(queryParam) ? queryParam[0] : queryParam;
   const session = await auth();
 
   // Optimized query with proper filtering
   const posts = await prisma.post.findMany({
-    where: query ? {
-      OR: [
-        { title: { contains: query, mode: 'insensitive' } },
-        { content: { contains: query, mode: 'insensitive' } },
-      ],
-    } : undefined,
+    where: query?.trim()
+      ? {
+          OR: [
+            { title: { contains: query, mode: "insensitive" } },
+            { content: { contains: query, mode: "insensitive" } },
+          ],
+        }
+      : undefined,
     orderBy: { createdAt: "desc" },
     select: {
       id: true,

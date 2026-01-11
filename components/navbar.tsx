@@ -13,6 +13,7 @@ import { cn } from "@/lib/utils";
 const NAVBAR_LINKS = [
   { href: "/", label: "Нүүр хуудас" },
   { href: "/posts", label: "Нийтлэл" },
+  { href: "/challenge-guide", label: "Challenge Guide" },
   { href: "/membership", label: "Гишүүн болох" },
 ] as const;
 
